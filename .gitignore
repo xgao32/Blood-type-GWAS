@@ -1,0 +1,15 @@
+
+# files to be ignored
+*.vcf
+*.gz
+*.tbi
+*.csi
+*.bim
+*.bed
+*.tped
+*.log
+*.fam
+*.ped
+*.nosex
+*.tfam
+
