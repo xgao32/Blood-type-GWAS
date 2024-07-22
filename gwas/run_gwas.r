@@ -10,7 +10,7 @@ library(Rsamtools)
 vcf_files <- readlines("gwas\vcf_files.txt")
 
 # variation position
-variant_info <- list(CHROM = "9", POS = 136132468, REF = "G", ALT = "")
+variant_info <- list(CHROM = "9", POS = , REF = "G", ALT = "")
 
 find_variant <- function(vcf_file, variant_info) {
   tabix_file <- TabixFile(vcf_file)
