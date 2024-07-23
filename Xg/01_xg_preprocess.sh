@@ -4,7 +4,7 @@
 # convert vcf of chromosome X into other formats
 
 # NUS HPC load modules
-modules load plink, bcftools
+module load plink, bcftools
 
 # convert to PED/MAP format. MAP file contain all markers, PED file has sample information and genotype columns like 
 # FID     IID     PID MID Sex (1 male, 2 female, 0 unknown) Phenotype (-9 unknown) Genotype
