@@ -12,4 +12,5 @@
 *.ped
 *.nosex
 *.tfam
-
+*.map
+plink_result*
