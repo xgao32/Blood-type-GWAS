@@ -15,7 +15,7 @@ modules load plink, bcftools
     --recode --out fid_iid_sex
 '
 
-echo -e "\n convert vcf file to plink format first, filter out variants with missing rate > 0.02, not in Hardy-Weinberg equilibrium, minor allele frequency < 0.01 \n"
+# echo -e "\n convert vcf file to plink format first, filter out variants with missing rate > 0.02, not in Hardy-Weinberg equilibrium, minor allele frequency < 0.01 \n"
 'plink \
     --vcf ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz \
     --make-bed \
@@ -28,10 +28,12 @@ echo -e "\n convert vcf file to plink format first, filter out variants with mis
 
 
 # Extract the genotype information for the specific variant
+echo -e "\n  Extract the genotype information for the specific variant \n"
 bcftools query -r X:2666384 -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t[%SAMPLE\t%GT\n]' ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz > xg_genotype_info.txt
 
 # encode Xg phenotype in phenotype column of PED file 
 # Recode the phenotype column based on the extracted genotype information. G is reference, C is alternate
+echo -e "\n encode Xg phenotype in phenotype column of PED file  \n"
 awk '
     BEGIN {FS=OFS="\t"}
     NR==FNR {
