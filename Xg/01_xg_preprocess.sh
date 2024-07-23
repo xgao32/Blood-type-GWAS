@@ -40,7 +40,7 @@ split -l 1000 output.ped ped_chunk_
 # Recode the phenotype column based on the extracted genotype information. G is reference, C is alternate
 echo -e "\n parallelized encode Xg phenotype in phenotype column of PED file  \n"
 ls ped_chunk_* | xargs -P 4 -I {} sh -c '
-    awk -v geno="genotype_info.txt" '
+    awk -v geno="xg_genotype_info.txt" '
     BEGIN {FS=OFS="\t"}
     NR==FNR {
         if ($6 == "0|0" || $6 == "0/0") genotype[$1] = "G G";
