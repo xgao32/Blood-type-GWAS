@@ -10,13 +10,13 @@ modules load plink, bcftools
 # FID     IID     PID MID Sex (1 male, 2 female, 0 unknown) Phenotype (-9 unknown) Genotype
 # FAM001  IND001  0  0  1  -9  A A  C C  T T
 # FAM001  IND002  0  0  2  -9  A G  C C  T T
-'plink \
+: 'plink \
     --vcf ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz \
     --recode --out fid_iid_sex
 '
 
 # echo -e "\n convert vcf file to plink format first, filter out variants with missing rate > 0.02, not in Hardy-Weinberg equilibrium, minor allele frequency < 0.01 \n"
-'plink \
+: 'plink \
     --vcf ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz \
     --make-bed \
     --geno 0.02 \
