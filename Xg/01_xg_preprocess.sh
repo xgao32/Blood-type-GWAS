@@ -28,13 +28,19 @@ modules load plink, bcftools
 
 
 # Extract the genotype information for the specific variant
-echo -e "\n  Extract the genotype information for the specific variant \n"
-bcftools query -r X:2666384 -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t[%SAMPLE\t%GT\n]' ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz > xg_genotype_info.txt
+# echo -e "\n  Extract the genotype information for the specific variant \n"
+# bcftools query -r X:2666384 -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t[%SAMPLE\t%GT\n]' ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz > xg_genotype_info.txt
+
+
+# split PED file into chunks
+split -l 1000 output.ped ped_chunk_
+
 
 # encode Xg phenotype in phenotype column of PED file 
 # Recode the phenotype column based on the extracted genotype information. G is reference, C is alternate
-echo -e "\n encode Xg phenotype in phenotype column of PED file  \n"
-awk '
+echo -e "\n parallelized encode Xg phenotype in phenotype column of PED file  \n"
+ls ped_chunk_* | xargs -P 4 -I {} sh -c '
+    awk -v geno="genotype_info.txt" '
     BEGIN {FS=OFS="\t"}
     NR==FNR {
         if ($6 == "0|0" || $6 == "0/0") genotype[$1] = "G G";
@@ -50,4 +56,7 @@ awk '
             print
         }
     }
-' xg_genotype_info.txt fid_iid_sex.ped > recoded.ped
+    ' xg_genotype_info.txt {} > {}.recoded
+'
+# combine recoded files
+cat ped_chunk_*.recoded > parallelized_recoded.ped
