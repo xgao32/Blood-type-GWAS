@@ -14,3 +14,4 @@
 *.tfam
 *.map
 plink_result*
+.nf*
