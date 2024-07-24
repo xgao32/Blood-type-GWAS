@@ -7,7 +7,7 @@ library(vcfR)
 library(Rsamtools)
 
 # VCF
-vcf_files <- readlines("gwas\vcf_files.txt")
+vcf_files <- readlines('gwas\vcf_files.txt')
 
 # variation position
 variant_info <- list(CHROM = "9", POS = , REF = "G", ALT = "")
