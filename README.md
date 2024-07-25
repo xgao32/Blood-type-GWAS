@@ -10,7 +10,7 @@
   2. potential challenges with homologous genes that are almost identical like RHD and RHCE, require long read sequencing to distinguish reads between the two genes
   3. for individuals without SNP data for specific blood group, treat as having the default blood group as the reference genome hg19 
 
-#### use `renv` to manage R  packages for this repository 
+#### use `renv` to manage R packages for this repository
 ```R
 library(renv) # renv is available globally in R
 
@@ -22,3 +22,6 @@ packages <- c("dplyr", "ggplot2", "tidyr", "BiocManager",
 renv::install(packages)
 renv::snapshot()
 ```
+
+manual installation of MASS for R 4.3.3
+
