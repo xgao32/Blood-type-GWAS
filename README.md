@@ -8,17 +8,17 @@
 ### 2. predict blood group based on genotyping aforementioned SNPs with microarrays 
   1. alternate methods : multiplex Taqman PCR, sequencing
   2. potential challenges with homologous genes that are almost identical like RHD and RHCE, require long read sequencing to distinguish reads between the two genes
-  3. for individuals without SNP data for specific blood group, treat as having the default blood group as the reference genome hg19 (what is hg19 blood type?)
+  3. for individuals without SNP data for specific blood group, treat as having the default blood group as the reference genome hg19 
 
 #### use `renv` to manage R  packages for this repository 
 ```R
 library(renv) # renv is available globally in R
-renev::init(bioconductor = TRUE)
 
-# add packages to be installed
+
+# add packages to be installed, unable to install Rsamtools 
 packages <- c("dplyr", "ggplot2", "tidyr", "BiocManager",  
  		"data.table", "vcfR","Rsamtools","manhattanly",  
-		"qqman", "plotly")
+		"qqman", "plotly") 
 renv::install(packages)
 renv::snapshot()
 ```
