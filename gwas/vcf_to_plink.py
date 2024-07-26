@@ -1,14 +1,15 @@
 import hail as hl
 import pandas as pd
 
-def convert_vcf_to_plink(vcf_file, output_prefix):
+
+def convert_vcf_to_plink(vcf_url, output_prefix):
+
     hl.init()
-    mt = hl.import_vcf(vcf_file, reference_genome='GRCh37')
+    mt = hl.import_vcf(vcf_url, reference_genome='GRCh37')
     mt = hl.variant_qc(mt)
 
     # filter
     mt = mt.filter_rows(mt.variant_qc.call_rate > 0.95)
-
 
     hl.export_plink(mt, output_prefix)
 
