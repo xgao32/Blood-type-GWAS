@@ -17,6 +17,6 @@ library(renv)
 packages <- c("dplyr", "ggplot2", "tidyr", "manhattanly",  
 		"qqman", "plotly") 
 renv::install(packages)
-renv::snapshot()
+renv::snapshot() # creat renv.lock file to save package versions
 ```
 
