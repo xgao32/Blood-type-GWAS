@@ -12,16 +12,11 @@
 
 #### use `renv` to manage R packages for this repository
 ```R
-library(renv) # renv is available globally in R
-
-
-# add packages to be installed, unable to install Rsamtools 
-packages <- c("dplyr", "ggplot2", "tidyr", "BiocManager",  
- 		"data.table", "vcfR","Rsamtools","manhattanly",  
+library(renv) 
+# add packages to be installed
+packages <- c("dplyr", "ggplot2", "tidyr", "manhattanly",  
 		"qqman", "plotly") 
 renv::install(packages)
 renv::snapshot()
 ```
-
-manual installation of MASS for R 4.3.3
 

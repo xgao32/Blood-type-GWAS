@@ -15,3 +15,5 @@
 *.map
 plink_result*
 .nf*
+*.pdf
+*.vscode
