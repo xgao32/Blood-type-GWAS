@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Local VCF file path and output prefix
-local_vcf_path="~/Blood-type-GWAS/gwas/ALL.chr9.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz"
+local_vcf_path="/home/toronto/Blood-type-GWAS/gwas/ALL.chr9.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz"
 output_prefix="test_chr9"
 
 # Run the Python script with the specified function and arguments
