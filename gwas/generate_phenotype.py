@@ -37,3 +37,13 @@ def create_phenotype_file(vcf_file, chrom, pos, ref, alt, output_file):
     pheno_data.to_csv(output_file, sep='\t', index=False, header=False)
     print(f"Phenotype file saved to {output_file}")
     hl.stop()
+
+if __name__ == "__main__":
+    vcf_file = sys.argv[1]
+    chrom = sys.argv[2]
+    pos = int(sys.argv[3])
+    ref = sys.argv[4]
+    alt = sys.argv[5]
+    output_file = sys.argv[6]
+
+    create_phenotype_file(vcf_file, chrom, pos, ref, alt, output_file)
