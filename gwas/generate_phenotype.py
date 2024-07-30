@@ -1,3 +1,4 @@
+import sys
 import hail as hl
 import pandas as pd
 
@@ -6,7 +7,7 @@ def create_phenotype_file(vcf_file, chrom, pos, ref, alt, output_file):
     hl.init()
 
     # read vcf
-    mt = hl.import_vcf(vcf_file, reference_genome='GRCh37')
+    mt = hl.import_vcf(vcf_file, reference_genome='GRCh37', force=True)
     print("sucess import")
     # set variant
     variant = mt.filter_rows(
