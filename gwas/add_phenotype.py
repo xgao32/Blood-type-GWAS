@@ -18,6 +18,8 @@ def update_plink_phenotype(fam_file, phenotype_file, output_fam_file):
     phenotype_data['FID'] = phenotype_data['FID'].astype(str)
     phenotype_data['IID'] = phenotype_data['IID'].astype(str)
 
+    print(phenotype_data)
+
     # Merge the new phenotype data with the .fam data
     updated_fam_data = fam_data.merge(phenotype_data[['FID', 'IID', 'NewPhenotype']], on=['FID', 'IID'], how='left')
 
