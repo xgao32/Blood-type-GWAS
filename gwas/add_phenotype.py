@@ -22,10 +22,10 @@ def update_plink_phenotype(fam_file, phenotype_file, output_fam_file):
 
     # Merge the new phenotype data with the .fam data
     updated_fam_data = fam_data.merge(phenotype_data[['FID', 'IID', 'NewPhenotype']], on=['FID', 'IID'], how='left')
-
+    print(updated_fam_data)
     # Update the 'Phenotype' column with the new data
     updated_fam_data['Phenotype'] = updated_fam_data['NewPhenotype']
-
+    print(updated_fam_data)
     # Handle missing values: retain original phenotype values if new ones are missing
     updated_fam_data['Phenotype'].fillna(fam_data['Phenotype'], inplace=True)
     updated_fam_data['Phenotype'] = updated_fam_data['Phenotype'].apply(lambda x: fam_data['Phenotype'] if x == 'NA' else x)
