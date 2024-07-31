@@ -3,27 +3,42 @@ import pandas as pd
 import sys
 
 
-def update_fam_phenotype(fam_file, phenotype_file, output_fam_file):
+def update_plink_phenotype(fam_file, phenotype_file, output_fam_file):
     # Read the .fam file
     fam_data = pd.read_csv(fam_file, delim_whitespace=True, header=None)
+    fam_data.columns = ['FID', 'IID', 'PID', 'MID', 'Sex', 'Phenotype']
 
-    # Read the phenotype file, assuming it has 'FID', 'IID', and 'Phenotype' columns
-    phenotype_data = pd.read_csv(phenotype_file, delim_whitespace=True, header=None, names=['FID', 'IID', 'Phenotype'])
+    # Read the new phenotype data file
+    phenotype_data = pd.read_csv(phenotype_file, delim_whitespace=True, header=None)
+    phenotype_data.columns = ['FID', 'IID', 'NewPhenotype']
 
-    # Merge the two datasets on 'FID' and 'IID' to align the phenotypes with the fam file entries
-    merged_data = pd.merge(fam_data, phenotype_data, left_on=[0, 1], right_on=['FID', 'IID'], how='left')
+    # Ensure consistent data types for merging
+    fam_data['FID'] = fam_data['FID'].astype(str)
+    fam_data['IID'] = fam_data['IID'].astype(str)
+    phenotype_data['FID'] = phenotype_data['FID'].astype(str)
+    phenotype_data['IID'] = phenotype_data['IID'].astype(str)
 
-    # If no phenotype is found, keep the existing one in the fam file
-    merged_data['Phenotype'] = merged_data['Phenotype'].fillna(merged_data[5])
+    print(phenotype_data)
 
-    # Update the phenotype column (column index 5 in the fam file)
-    fam_data[5] = merged_data['Phenotype']
+    # Merge the new phenotype data with the .fam data
+    updated_fam_data = fam_data.merge(phenotype_data[['FID', 'IID', 'NewPhenotype']], on=['FID', 'IID'], how='left')
+    print(updated_fam_data)
+    # Update the 'Phenotype' column with the new data
+    updated_fam_data['Phenotype'] = phenotype_data['NewPhenotype']
+    print(updated_fam_data)
+    # Handle missing values: retain original phenotype values if new ones are missing
+    updated_fam_data['Phenotype'].fillna(fam_data['Phenotype'], inplace=True)
+    updated_fam_data['Phenotype'] = updated_fam_data['Phenotype'].apply(lambda x: fam_data['Phenotype'] if x == 'NA' else x)
+    print(updated_fam_data)
+    # Drop the temporary 'NewPhenotype' column
+    updated_fam_data = updated_fam_data.drop(columns=['NewPhenotype'])
 
-    # Write the updated fam file
-    fam_data.to_csv(output_fam_file, sep=' ', header=False, index=False)
+    # Save the updated .fam file
+    updated_fam_data.to_csv(output_fam_file, sep=' ', header=False, index=False)
+    print(f"Updated .fam file saved to {output_fam_file}")
 
 if __name__ == "__main__":
     fam_file = sys.argv[1]
     phenotype_file = sys.argv[2]
     output_fam_file = sys.argv[3]
-    update_fam_phenotype(fam_file, phenotype_file, output_fam_file)
+    update_plink_phenotype(fam_file, phenotype_file, output_fam_file)
