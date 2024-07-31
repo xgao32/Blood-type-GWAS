@@ -11,7 +11,7 @@ def update_fam_phenotype(fam_file, phenotype_file, output_fam_file):
     phenotype_data = pd.read_csv(phenotype_file, delim_whitespace=True, header=None, names=['FID', 'IID', 'Phenotype'])
 
     # Merge the two datasets on 'FID' and 'IID' to align the phenotypes with the fam file entries
-    merged_data = pd.merge(fam_data, phenotype_data, on=[0, 1], how='left')
+    merged_data = pd.merge(fam_data, phenotype_data, left_on=[0, 1], right_on=['FID', 'IID'], how='left')
 
     # If no phenotype is found, keep the existing one in the fam file
     merged_data['Phenotype'] = merged_data['Phenotype'].fillna(merged_data[5])
