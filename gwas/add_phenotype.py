@@ -1,5 +1,6 @@
 import hail as hl
 import pandas as pd
+import sys
 
 def update_plink_phenotype(fam_file, phenotype_file, output_fam_file):
     fam_data = pd.read_csv(fam_file, delim_whitespace=True, header=None)
