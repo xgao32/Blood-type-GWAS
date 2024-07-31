@@ -26,7 +26,7 @@ def update_plink_phenotype(fam_file, phenotype_file, output_fam_file):
 
     # Handle missing values: retain original phenotype values if new ones are missing
     updated_fam_data['Phenotype'].fillna(fam_data['Phenotype'], inplace=True)
-    updated_fam_data['Phenotype'].replace('NA', fam_data['Phenotype'], inplace=True)
+    updated_fam_data['Phenotype'] = updated_fam_data['Phenotype'].apply(lambda x: fam_data['Phenotype'] if x == 'NA' else x)
 
     # Drop the temporary 'NewPhenotype' column
     updated_fam_data = updated_fam_data.drop(columns=['NewPhenotype'])
