@@ -26,4 +26,4 @@ if __name__ == "__main__":
     fam_file = sys.argv[1]
     phenotype_file = sys.argv[2]
     output_fam_file = sys.argv[3]
-    update_plink_phenotype(fam_file, phenotype_file, output_fam_file)
+    update_fam_phenotype(fam_file, phenotype_file, output_fam_file)
