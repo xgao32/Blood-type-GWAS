@@ -20,7 +20,7 @@ def update_fam_phenotype(fam_file, phenotype_file, output_fam_file):
     fam_data[5] = merged_data['Phenotype']
 
     # Write the updated fam file
-    fam_data.to_csv(fam_file, sep=' ', header=False, index=False)
+    fam_data.to_csv(output_fam_file, sep=' ', header=False, index=False)
 
 if __name__ == "__main__":
     fam_file = sys.argv[1]
