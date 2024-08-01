@@ -1,8 +1,12 @@
 
 # files to be ignored
+
+# sequence data
 *.vcf
 *.gz
 *.tbi
+
+# plink output
 *.csi
 *.bim
 *.bed
@@ -16,4 +20,6 @@
 plink_result*
 .nf*
 *.pdf
+
+# vs code configuration
 *.vscode

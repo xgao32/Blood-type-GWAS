@@ -11,6 +11,7 @@
   3. for individuals without SNP data for specific blood group, treat as having the default blood group as the reference genome hg19 
 
 #### use `renv` to manage R packages for this repository
+NUS HPC
 ```R
 library(renv) 
 # add packages to be installed
