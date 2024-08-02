@@ -4,26 +4,29 @@
 # convert vcf of chromosome X into other formats
 
 # NUS HPC load modules
-module load plink, bcftools
+module load plink
+module load bcftools
 
 # convert to PED/MAP format. MAP file contain all markers, PED file has sample information and genotype columns like 
 # FID     IID     PID MID Sex (1 male, 2 female, 0 unknown) Phenotype (-9 unknown) Genotype
 # FAM001  IND001  0  0  1  -9  A A  C C  T T
 # FAM001  IND002  0  0  2  -9  A G  C C  T T
-: 'plink \
+:'plink \
     --vcf ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz \
     --recode --out fid_iid_sex
 '
 
-# echo -e "\n convert vcf file to plink format first, filter out variants with missing rate > 0.02, not in Hardy-Weinberg equilibrium, minor allele frequency < 0.01 \n"
+# convert to BED/BIM/FAM format after filerting 
+echo -e "\n convert vcf file to bed/bim/fam, filter out variants with missing rate > 0.01, not in Hardy-Weinberg equilibrium, minor allele frequency < 0.01 \n"
 : 'plink \
-    --vcf ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz \
-    --make-bed \
-    --geno 0.02 \
+    --vcf All_1KG_combined.vcf.gz \
+    --geno 0.01 \
     --hwe 1e-6 \
     --maf 0.01 \
-    --mind 0.02 \
-    --out plink_results \ 
+    --mind 0.01 \
+    --indep-pairwise 50 5 0.2 \
+    --make-bed \
+    --out \plink_results\All_plink_results \ 
 '
 
 

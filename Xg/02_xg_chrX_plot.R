@@ -35,6 +35,13 @@ calculate_lambda <- function(p_values) {
     return(lambda)
 }
 
+# https://ibg.colorado.edu/cdrom2019/colodro_grasby/GWAS_QC_part2/GWAS_QC_part2_practical.pdf
+# lambda = ratio of the median of the empirically observed distribution of the test statistic to the expected median.
+#• It quantifies the extent of the bulk inflation and the excess false positive rate.
+#• The expected median of the chi-square distribution with one degree of freedom is 0.455.
+#• lambda=median(chi^2)/0.455
+#• It should be close to 1.
+
 lambda <- calculate_lambda(gwas_data$P) # need to handle NA values
 
 png("Xg/eas/xg_qqplot_lambda.png", width = 650, height = 600)

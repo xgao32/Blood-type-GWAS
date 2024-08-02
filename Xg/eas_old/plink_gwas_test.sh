@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# results in eas_old folder, used EAS 1KG data from GWASTutorial which had artificial errors
 genotypeFile="/home/svu/xgao32/GWASTutorial/04_Data_QC/sample_data.clean" # the clean dataset we generated in previous section
 phenotypeFile="/hpctmp/xgao32/Blood-type-GWAS/Xg/xg_genotype_info_modified.txt" # the phenotype file
 covariateFile="../05_PCA/plink_results_projected.sscore" # the PC score file

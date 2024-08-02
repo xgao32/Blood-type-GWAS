@@ -1,17 +1,20 @@
 #!/bin/bash
+# GWAS on 1KG data from PLINK website
 
-# script to run GWAS on full 1KG data 
-genotypeFile="/home/svu/xgao32/GWASTutorial/01_dataset/sample_data.clean" # 
-phenotypeFile="/Xg/xg_genotype_info_modified.txt" # the phenotype file
-
+phenotypeFile= "/hpctmp/xgao32/Blood-type-GWAS/Xg/xg_genotype_info_modified.txt"
+#"../xg_genotype_info_modified.txt" # the phenotype file
 colName="xg"
-threadnum=24
+out="/hpctmp/xgao32/Blood-type-GWAS/Xg/all1kg/plink_results"
 
-plink2 \
-    --bfile ${genotypeFile} \
-    --pheno ${phenotypeFile} \
-    --pheno-name ${colName} \
-    # --maf 0.01 \
-    --glm dominant hide-covar firth \
-    --threads ${threadnum} \
-    --out 1kgeas
+for chr in {22..23}; do
+    echo -e "\nChromosome $chr.\n"
+
+    genotypeFile="/hpctmp/xgao32/1KG/phase3_grch37/filtered_vcf/ALL.chr$chr.filtered" 
+    
+    plink2 \
+        --bfile "${genotypeFile}" \
+        --pheno "${phenotypeFile}" \
+        --pheno-name "${colName}" \
+        --glm dominant hide-covar firth \
+        --out "${out}/xg_gwas_chr${chr}"
+done
