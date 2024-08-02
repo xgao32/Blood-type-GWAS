@@ -24,12 +24,12 @@ def create_phenotype_file(vcf_file, chrom, pos, ref, alt, output_file):
     geno = variant.GT.collect()
     sample_ids = variant.s.collect()
     print("success collect variants")
-    # 0|0: 2 (variant), 0|1, 1|0, 1|1: 1 (control)
+    # 1|1: 2 (variant), 0|1, 1|0, 0|0: 1 (control)
     phenotype = [2 if gt.is_hom_ref() else 1 for gt in geno]
     print("success create phenotypes")
     # create data frame
     pheno_data = pd.DataFrame({
-        'FID': sample_ids,
+        'FID': 0,
         'IID': sample_ids,
         'PHENO': phenotype
     })
