@@ -1,17 +1,19 @@
 import gwaslab as gl
+import sys
 
 
-
-def main():
-    sumstats = gl.Sumstats("1kgeas.Phenotype.glm.logistic.hybrid", fmt="plink2")
+def main(inputadd, outputadd):
+    sumstats = gl.Sumstats(inputadd, fmt="plink2")
     sumstats.get_lead(sig_level=5e-8)
 
-    sumstats.basic_check()
+    chrom_9_data = sumstats.data[sumstats.data['CHR'] == '9']
 
-    sumstats.plot_mqq(mode="r", anno=True, region=(9, 0, 1000000000), region_grid=True, build="19")
+    plot = gl.manhattan(chrom_9_data, p='P', chrom='CHR', pos='POS', highlight=True)
 
+    plot.figure.savefig(outputadd)
 
 
 
 if __name__ == '__main__':
-    main()
+
+    main(sys.argv[1], sys.argv[2])
