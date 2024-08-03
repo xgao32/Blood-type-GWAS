@@ -17,9 +17,12 @@
 *.nosex
 *.tfam
 *.map
-plink_result*
 .nf*
 *.pdf
 
 # vs code configuration
 *.vscode
+
+# folders to ignore
+ignore/
+plink_1KG/

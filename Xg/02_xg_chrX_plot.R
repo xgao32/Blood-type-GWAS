@@ -8,6 +8,40 @@ library(htmlwidgets);
 library(qqman);
 library(data.table);
 
+
+# ---- Read and Combine GWAS Results ----
+# List of GWAS result files
+gwas_files <- list.files(path = "/hpctmp/xgao32/Blood-type-GWAS/Xg/all1kg/plink_results", pattern = "*.glm.firth", full.names = TRUE)
+
+# Read and combine all GWAS result files
+# Read and combine all GWAS result files
+gwas_data_list <- lapply(gwas_files, fread)
+combined_gwas_data <- rbindlist(gwas_data_list, use.names = TRUE, fill = TRUE)
+
+# Check if all tables have the same columns
+if (length(unique(sapply(gwas_data_list, colnames))) > 1) {
+    stop("Not all tables have the same columns")
+}
+
+# ---- Check Data Structure ----
+str(combined_gwas_data)
+
+# check all P column in combined_gwas_data have no NA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ---- Read GWAS Results ----
 gwas_data <- fread("Xg/eas/1kgeas.xg.glm.firth")
 
