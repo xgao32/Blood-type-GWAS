@@ -12,7 +12,7 @@ def convert_vcf_to_plink(local_vcf_path, output_prefix):
     hl.init()
 
     # Import VCF from the local file system
-    mt = hl.import_vcf(local_vcf_path, reference_genome='GRCh37')
+    mt = hl.import_vcf(local_vcf_path, reference_genome='GRCh37', force=True)
     mt = hl.variant_qc(mt)
 
     # Filter variants with call rate > 0.95
