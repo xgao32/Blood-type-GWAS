@@ -34,7 +34,7 @@ def create_phenotype_file(vcf_file, chrom, pos, ref, alt, output_file):
         'PHENO': phenotype
     })
 
-    pheno_data.to_csv(output_file, sep='\t', index=False, header=False)
+    pheno_data.to_csv(output_file, sep='\t', index=False, header=['FID', 'IID', 'PHENO'])
     print(f"Phenotype file saved to {output_file}")
     hl.stop()
 
