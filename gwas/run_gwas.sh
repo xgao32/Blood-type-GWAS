@@ -32,7 +32,7 @@ python $script_file $fam_file $phenotype_file $output_fam_file
 genotypeFile="${root_dir}/test_chr9" # the clean dataset we generated in previous section
 phenotypeFile="${root_dir}/test_chr9.txt" # the phenotype file
 
-colName="Pheno"
+colName="PHENO"
 threadnum=20
 
 plink2 \
