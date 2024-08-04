@@ -30,7 +30,12 @@ def create_phenotype_file(vcf_file, chrom, pos, ref, alt, output_file):
     sample_ids = variant.s.collect()
     print("success collect variants")
     # 1|1: 2 (variant), 0|1, 1|0, 0|0: 1 (control)
-    phenotype = [get_phenotype(gt) for gt in geno]
+    phenotype = [2 if gt.is_hom_ref() else 1 for gt in geno]
+    for gt in geno:
+        if gt.is_hom_var():
+            phenotype.append(2)
+        else:
+            phenotype.append(1)
     print("success create phenotypes")
     # create data frame
     pheno_data = pd.DataFrame({

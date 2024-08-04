@@ -4,7 +4,7 @@
 vcf_file="/home/toronto/Blood-type-GWAS/gwas/ALL.chr9.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz"
 output_file="/home/toronto/Blood-type-GWAS/gwas/test_chr9.txt"
 chrom="9"
-pos=132136809
+pos=132136935
 ref="G"
 alt="A"
 
