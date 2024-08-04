@@ -30,7 +30,7 @@ def create_phenotype_file(vcf_file, chrom, pos, ref, alt, output_file):
     sample_ids = variant.s.collect()
     print("success collect variants")
     # 1|1: 2 (variant), 0|1, 1|0, 0|0: 1 (control)
-    phenotype = [2 if gt.is_hom_ref() else 1 for gt in geno]
+    phenotype = []
     for gt in geno:
         if gt.is_hom_var():
             phenotype.append(2)
