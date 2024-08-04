@@ -1,15 +1,26 @@
 # Manhattan plot and QQ plot for GWAS result for chromosome X SNPs associated with Xg 
-# see https://sahirbhatnagar.com/manhattanly/articles/web_only/manhattanly_full.html
+# https://sahirbhatnagar.com/manhattanly/articles/web_only/manhattanly_full.html
+
+# NUS HPC requires source /app1/ebenv
+# do not use R-bundle-Bioconductor which is R 4.3.2 and cannot install MASS package 
+# module load R/4.2.2-foss-2022b
+# make sure current directory is Blood-type-GWAS. If in Xg directory, renv will fail.
+# open R then use renv::restore() to create environment matching the same as in github codespace
+
+# install.packages(c("plotly", "qqman", "data.table") if renv::restore() doesn't work
 
 # ---- Load Libraries ----
-library("manhattanly");
-library(plotly);
-library(htmlwidgets);
-library(qqman);
-library(data.table);
+#library("manhattanly");
+#library(plotly)
+#library(htmlwidgets)
+library(qqman)
+library(data.table)
 
 # ---- Read GWAS Results ----
-gwas_data <- fread("/workspaces/Blood-type-GWAS/Xg/all1kg/plink_results/all_xg_gwas_combined_results.glm.firth") #fread("Xg/eas/1kgeas.xg.glm.firth")
+CUR_DIR = getwd() # should be in Blood-type-GWAS/ directory
+DIR_FILE = "Xg/all1kg/plink_results/all_xg_gwas_combined_results.glm.firth"
+PATH = file.path(CUR_DIR,DIR_FILE)
+gwas_data <- fread(PATH)
 
 # ---- Check Data Structure ----
 str(gwas_data)
@@ -37,36 +48,33 @@ calculate_lambda <- function(p_values) {
     lambda <- median(chi_squared, na.rm = TRUE) / qchisq(0.5, df = 1)
     return(lambda)
 }
+lambda <- calculate_lambda(gwas_data$P) # need to handle NA values
+
 # Calculate the maximum -log10(p-value)
 max_logp <- max(-log10(gwas_data$P), na.rm = TRUE)
-
-# https://ibg.colorado.edu/cdrom2019/colodro_grasby/GWAS_QC_part2/GWAS_QC_part2_practical.pdf
-# lambda = ratio of the median of the empirically observed distribution of the test statistic to the expected median.
-#• It quantifies the extent of the bulk inflation and the excess false positive rate.
-#• The expected median of the chi-square distribution with one degree of freedom is 0.455.
-#• lambda=median(chi^2)/0.455
-#• It should be close to 1.
-
-lambda <- calculate_lambda(gwas_data$P) # need to handle NA values
 
 png("Xg/xg_all_chr_1KG_qqplot_lambda.png", width = 650, height = 600)
 # Set graphical parameters to increase font sizes and margins
 par(cex.main=2, cex.lab=1.5, cex.axis=1.3, mar=c(6, 6, 6, 10))
 xg_qqplot <- qq(gwas_data$P, main="QQ Plot \n 1KG Xg All Chr")
-text(1, 10, paste("λ =", round(lambda, 3)), adj=c(0,1), cex=2)
+text_x <- 1
+text_y <- max_logp - 0.3 * max_logp
+# Add the text to the plot
+text(text_x, text_y, paste("\u03BB =", round(lambda, 3)), adj=c(0,1), cex=2)
 dev.off()
 
 
 # ---- plots for autosomes only ----
 # Filter out rows where #CHROM is 23
+gwas_data$`#CHROM` <- as.numeric(gwas_data$`#CHROM`)
 filtered_gwas_data <- gwas_data[gwas_data$`#CHROM` != 23, ]
 
 # Open a PNG device for the Manhattan plot
 png("Xg/xg_autosomes_all_1KG_manhattan_plot.png", width = 1600, height = 1000)
+par(cex.main=2, cex.lab=1.5, cex.axis=1.3, mar=c(6, 6, 6, 10))
 xg_manplot <- manhattan(filtered_gwas_data, chr="#CHROM", bp="POS", snp="ID", p="P", 
                         main="Manhattan Plot 1KG",
                         ylim=c(0, ceiling(max(-log10(filtered_gwas_data$P), na.rm = TRUE))))
-# Close the device
 dev.off()
 
 # ---- QQ plot with genomic inflation factor
@@ -86,11 +94,15 @@ max_logp <- max(-log10(filtered_gwas_data$P), na.rm = TRUE)
 lambda <- calculate_lambda(filtered_gwas_data$P) # need to handle NA values
 
 # Open a PNG device for the QQ plot
-png("Xg/xg_all_chr_1KG_qqplot_lambda_filtered.png", width = 650, height = 600)
+png("Xg/xg_autosomes_chr_1KG_qqplot_lambda_filtered.png", width = 650, height = 600)
 # Set graphical parameters to increase font sizes and margins
 par(cex.main=2, cex.lab=1.5, cex.axis=1.3, mar=c(6, 6, 6, 10))
-xg_qqplot <- qq(filtered_gwas_data$P, main="QQ Plot \n 1KG Xg All Chr (Filtered)")
-text(1, 10, paste("λ =", round(lambda, 3)), adj=c(0,1), cex=2)
+xg_qqplot <- qq(filtered_gwas_data$P, main="QQ Plot \n 1KG Xg Autosomes")
+# Calculate the coordinates for placing the text
+text_x <- 1
+text_y <- max_logp - 0.3 * max_logp
+# Add the text to the plot
+text(text_x, text_y, paste("\u03BB =", round(lambda, 3)), adj=c(0,1), cex=2)
 dev.off()
 
 
@@ -99,11 +111,18 @@ dev.off()
 threshold <- 5e-8;
 subset_data <- gwas_data[gwas_data$P < threshold & gwas_data$`#CHROM` != 23, ]
 
-# save subset_data to a file
+# specific paths for significant X chromosome and autosomes SNPs
+PATH_X_SNPS = "Xg/all1kg/xg_chrX_all_1KG_sig_snps.txt"
+PATH_AUT_SNPS = "Xg/all1kg/xg_autosomes_no_chrX_all_1KG_sig_snps.txt"
+
 # save subset_data to file
-write.table(subset_data, file = "/workspaces/Blood-type-GWAS/Xg/all1kg/xg_autosomes_no_chrX_all_1KG_sig_snps.txt", sep = "\t", quote = FALSE, row.names = FALSE)
+write.table(subset_data, file = file.path(CUR_DIR,PATH_AUT_SNPS), sep = "\t", quote = FALSE, row.names = FALSE)
 
+# subset gwas_data table to contain only rows with #CHROM == 23 and below threshold for column P
+subset_data_chrX <- gwas_data[gwas_data$P < threshold & gwas_data$`#CHROM` == 23, ]
 
+# save subset_data_chrX to file
+write.table(subset_data_chrX, file = file.path(CUR_DIR,PATH_X_SNPS), sep = "\t", quote = FALSE, row.names = FALSE)
 
 
 # ---- ignore ----

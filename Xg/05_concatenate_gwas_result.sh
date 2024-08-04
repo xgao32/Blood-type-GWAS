@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the directory and pattern
-directory="/workspaces/Blood-type-GWAS/Xg/all1kg/plink_results"
+directory="/hpctmp/xgao32/Blood-type-GWAS/Xg/all1kg/plink_results"
 pattern="*.glm.firth"
 exclude_pattern="*.glm.firth.id"
 output_file="${directory}/all_xg_gwas_combined_results.glm.firth"
