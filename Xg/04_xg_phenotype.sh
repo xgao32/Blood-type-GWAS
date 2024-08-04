@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# unable to make the script work with the xg_genotype_info_modified.txt file, had to create the desired file
+# manually by copying the first three columns of the xg_genotype_info_modified.txt file and the all_phase3_xg_modified.psam file
+# in google docs
+
 # Define the file paths
 PSAM_FILE="all_phase3_xg_modified.psam"
 GENOTYPE_FILE="xg_genotype_info_modified.txt"
@@ -7,7 +11,7 @@ TRIMMED_GENOTYPE_FILE="xg_genotype_info_modified_trimmed.txt"
 OUTPUT_FILE="merged_output.tsv"
 
 # Step 1: Trim the xg_genotype_info_modified.txt file to keep only the first three columns
-# awk '{print $1, $2, $3}' "$GENOTYPE_FILE" > "$TRIMMED_GENOTYPE_FILE"
+awk '{print $1, $2, $3}' "$GENOTYPE_FILE" > "$TRIMMED_GENOTYPE_FILE"
 
 # Step 2: Merge the trimmed file with the PSAM file on the IID column
 awk '
