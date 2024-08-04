@@ -15,9 +15,9 @@ convert_vcf_to_plink('$local_vcf_path', '$output_prefix')
 vcf_file="ALL.chr9.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz"
 output_file="${root_dir}/test_chr9.txt"
 chrom="9"
-pos=132136809
-ref="G"
-alt="A"
+pos=132136808
+ref="T"
+alt="TC"
 
 # Run the Python script to generate the phenotype file
 python generate_phenotype.py $vcf_file $chrom $pos $ref $alt $output_file
@@ -32,7 +32,7 @@ python $script_file $fam_file $phenotype_file $output_fam_file
 genotypeFile="${root_dir}/test_chr9" # the clean dataset we generated in previous section
 phenotypeFile="${root_dir}/test_chr9.txt" # the phenotype file
 
-colName="Phenotype"
+colName="Pheno"
 threadnum=20
 
 plink2 \
