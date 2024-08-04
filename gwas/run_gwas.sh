@@ -15,7 +15,7 @@ convert_vcf_to_plink('$local_vcf_path', '$output_prefix')
 vcf_file="ALL.chr9.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz"
 output_file="${root_dir}/test_chr9.txt"
 chrom="9"
-pos=132136808
+pos=132136908
 ref="T"
 alt="TC"
 
