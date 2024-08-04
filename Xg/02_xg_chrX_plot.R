@@ -8,57 +8,26 @@ library(htmlwidgets);
 library(qqman);
 library(data.table);
 
-
-# ---- Read and Combine GWAS Results ----
-# List of GWAS result files
-gwas_files <- list.files(path = "/hpctmp/xgao32/Blood-type-GWAS/Xg/all1kg/plink_results", pattern = "*.glm.firth", full.names = TRUE)
-
-# Read and combine all GWAS result files
-# Read and combine all GWAS result files
-gwas_data_list <- lapply(gwas_files, fread)
-combined_gwas_data <- rbindlist(gwas_data_list, use.names = TRUE, fill = TRUE)
-
-# Check if all tables have the same columns
-if (length(unique(sapply(gwas_data_list, colnames))) > 1) {
-    stop("Not all tables have the same columns")
-}
-
-# ---- Check Data Structure ----
-str(combined_gwas_data)
-
-# check all P column in combined_gwas_data have no NA
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # ---- Read GWAS Results ----
-gwas_data <- fread("Xg/eas/1kgeas.xg.glm.firth")
+gwas_data <- fread("/workspaces/Blood-type-GWAS/Xg/all1kg/plink_results/all_xg_gwas_combined_results.glm.firth") #fread("Xg/eas/1kgeas.xg.glm.firth")
 
 # ---- Check Data Structure ----
 str(gwas_data)
 
 # ---- Create Manhattan Plot with qqman ----
-# Calculate the maximum -log10(p-value)
-max_logp <- max(-log10(gwas_data$P), na.rm = TRUE)
+
+# change X to 23, change data type to numeric
+gwas_data$`#CHROM`[gwas_data$`#CHROM` == "X"] <- 23
+gwas_data$`#CHROM` <- as.numeric(gwas_data$`#CHROM`)
 
 # Open a PNG device
-png("Xg/eas/xg_manhattan_plot.png", width = 1600, height = 1000)
+png("Xg/xg_all_chr_manhattan_plot.png", width = 1600, height = 1000)
 xg_manplot <- manhattan(gwas_data, chr="#CHROM", bp="POS", snp="ID", p="P", 
-                        main="Manhattan Plot 1KG East Asians Xg",
+                        main="Manhattan Plot 1KG",
                         ylim=c(0, ceiling(max(-log10(gwas_data$P), na.rm = TRUE))))
 # Close the device
 dev.off()
+
 # ---- QQ plot with genomic inflation factor
 # function to compute genomic inflation factor lambda
 calculate_lambda <- function(p_values) {
@@ -68,6 +37,8 @@ calculate_lambda <- function(p_values) {
     lambda <- median(chi_squared, na.rm = TRUE) / qchisq(0.5, df = 1)
     return(lambda)
 }
+# Calculate the maximum -log10(p-value)
+max_logp <- max(-log10(gwas_data$P), na.rm = TRUE)
 
 # https://ibg.colorado.edu/cdrom2019/colodro_grasby/GWAS_QC_part2/GWAS_QC_part2_practical.pdf
 # lambda = ratio of the median of the empirically observed distribution of the test statistic to the expected median.
@@ -78,14 +49,61 @@ calculate_lambda <- function(p_values) {
 
 lambda <- calculate_lambda(gwas_data$P) # need to handle NA values
 
-png("Xg/eas/xg_qqplot_lambda.png", width = 650, height = 600)
-# Set graphical parameters to increase font sizes
-par(cex.main=2, cex.lab=1.5, cex.axis=1.3)
-xg_qqplot <- qq(gwas_data$P, main="QQ Plot \n 1KG East Asians Xg ")
-text(1, 5, paste("λ =", round(lambda, 3)), adj=c(0,1), cex=2)
+png("Xg/xg_all_chr_1KG_qqplot_lambda.png", width = 650, height = 600)
+# Set graphical parameters to increase font sizes and margins
+par(cex.main=2, cex.lab=1.5, cex.axis=1.3, mar=c(6, 6, 6, 10))
+xg_qqplot <- qq(gwas_data$P, main="QQ Plot \n 1KG Xg All Chr")
+text(1, 10, paste("λ =", round(lambda, 3)), adj=c(0,1), cex=2)
 dev.off()
 
+
+# ---- plots for autosomes only ----
+# Filter out rows where #CHROM is 23
+filtered_gwas_data <- gwas_data[gwas_data$`#CHROM` != 23, ]
+
+# Open a PNG device for the Manhattan plot
+png("Xg/xg_autosomes_all_1KG_manhattan_plot.png", width = 1600, height = 1000)
+xg_manplot <- manhattan(filtered_gwas_data, chr="#CHROM", bp="POS", snp="ID", p="P", 
+                        main="Manhattan Plot 1KG",
+                        ylim=c(0, ceiling(max(-log10(filtered_gwas_data$P), na.rm = TRUE))))
+# Close the device
+dev.off()
+
+# ---- QQ plot with genomic inflation factor
+# Function to compute genomic inflation factor lambda
+calculate_lambda <- function(p_values) {
+    # Convert p-values to chi-squared statistics
+    chi_squared <- qchisq(1 - p_values, df = 1)
+    # Calculate lambda
+    lambda <- median(chi_squared, na.rm = TRUE) / qchisq(0.5, df = 1)
+    return(lambda)
+}
+
+# Calculate the maximum -log10(p-value) for the filtered data
+max_logp <- max(-log10(filtered_gwas_data$P), na.rm = TRUE)
+
+# Calculate lambda for the filtered data
+lambda <- calculate_lambda(filtered_gwas_data$P) # need to handle NA values
+
+# Open a PNG device for the QQ plot
+png("Xg/xg_all_chr_1KG_qqplot_lambda_filtered.png", width = 650, height = 600)
+# Set graphical parameters to increase font sizes and margins
+par(cex.main=2, cex.lab=1.5, cex.axis=1.3, mar=c(6, 6, 6, 10))
+xg_qqplot <- qq(filtered_gwas_data$P, main="QQ Plot \n 1KG Xg All Chr (Filtered)")
+text(1, 10, paste("λ =", round(lambda, 3)), adj=c(0,1), cex=2)
+dev.off()
+
+
 # ---- list of significant SNPs ----
+# not on chromosome X, Subset the gwas_data table
+threshold <- 5e-8;
+subset_data <- gwas_data[gwas_data$P < threshold & gwas_data$`#CHROM` != 23, ]
+
+# save subset_data to a file
+# save subset_data to file
+write.table(subset_data, file = "/workspaces/Blood-type-GWAS/Xg/all1kg/xg_autosomes_no_chrX_all_1KG_sig_snps.txt", sep = "\t", quote = FALSE, row.names = FALSE)
+
+
 
 
 # ---- ignore ----

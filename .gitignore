@@ -1,5 +1,6 @@
 
 # files to be ignored
+all_xg_gwas_combined_results.glm.firth
 
 # sequence data
 *.vcf
