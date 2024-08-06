@@ -32,10 +32,11 @@ create_plots <- function(super_pop) {
     
     # Create Manhattan Plot
     png(file.path(base_directory, super_pop, paste0(super_pop,"_all_xg_chr_manhattan_plot.png")), width = 1600, height = 1000)
-    par(cex.main=2, cex.lab=1.5, cex.axis=1.3, mar=c(6, 6, 6, 10))
+    par(cex.main=4, cex.lab=3, cex.axis=2.6, mar=c(6, 6, 6, 10))
     manhattan(gwas_data, chr="#CHROM", bp="POS", snp="ID", p="P", 
                 main=paste("Manhattan Plot 1KG All Chromosomes -", super_pop),
-                ylim=c(0, ceiling(max(-log10(gwas_data$P), na.rm = TRUE))))
+                ylim=c(0, ceiling(max(-log10(gwas_data$P), na.rm = TRUE))),
+                cex.main=4, cex.lab=3, cex.axis=2.6, cex.names=2.4, cex.axis.names=2.4)
     dev.off()
     
     # Calculate lambda for QQ plot
@@ -60,10 +61,11 @@ create_plots <- function(super_pop) {
 
     # Create Manhattan Plot for autosomes
     png(file.path(base_directory, super_pop, paste0(super_pop,"_xg_autosomes_all_1KG_manhattan_plot.png")), width = 1600, height = 1000)
-    par(cex.main=2, cex.lab=1.5, cex.axis=1.3, mar=c(6, 6, 6, 10))
+    par(cex.main=4, cex.lab=3, cex.axis=2.6, mar=c(6, 6, 6, 10))
     manhattan(filtered_gwas_data, chr="#CHROM", bp="POS", snp="ID", p="P", 
             main=paste("Manhattan Plot 1KG - Autosomes -", super_pop),
-            ylim=c(0, ceiling(max(-log10(filtered_gwas_data$P), na.rm = TRUE))))
+            ylim=c(0, ceiling(max(-log10(filtered_gwas_data$P), na.rm = TRUE))),
+            cex.main=4, cex.lab=3, cex.axis=2.6, cex.names=2.4, cex.axis.names=2.4)
     dev.off()
 
     # Calculate lambda for autosomes QQ plot
