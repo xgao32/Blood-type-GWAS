@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the directory and patterns
-directory="/workspaces/Blood-type-GWAS/Xg/all1kg/plink_results"
+directory="$(pwd)/all1kg/plink_results"
 start_pattern="xg_gwas"
 end_pattern="*.glm.firth"
 exclude_pattern="*.glm.firth.id"

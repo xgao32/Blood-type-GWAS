@@ -10,15 +10,12 @@
 # install.packages(c("plotly", "qqman", "data.table") if renv::restore() doesn't work
 
 # ---- Load Libraries ----
-#library("manhattanly");
-#library(plotly)
-#library(htmlwidgets)
 library(qqman)
 library(data.table)
 
 # ---- Read GWAS Results ----
 CUR_DIR = getwd() # should be in Blood-type-GWAS/ directory
-DIR_FILE = "Xg/all1kg/plink_results/all_xg_gwas_combined_results.glm.firth"
+DIR_FILE = "Xg/all1kg/plink_results/all_xg_gwas_combined_results.glm.firth.gz"
 PATH = file.path(CUR_DIR,DIR_FILE)
 gwas_data <- fread(PATH)
 
@@ -33,9 +30,11 @@ gwas_data$`#CHROM` <- as.numeric(gwas_data$`#CHROM`)
 
 # Open a PNG device
 png("Xg/xg_all_chr_manhattan_plot.png", width = 1600, height = 1000)
+par(cex.main=4, cex.lab=3, cex.axis=2.6, mar=c(6, 6, 6, 10))
 xg_manplot <- manhattan(gwas_data, chr="#CHROM", bp="POS", snp="ID", p="P", 
                         main="Manhattan Plot 1KG",
-                        ylim=c(0, ceiling(max(-log10(gwas_data$P), na.rm = TRUE))))
+                        ylim=c(0, ceiling(max(-log10(gwas_data$P), na.rm = TRUE))),
+                        cex.main=4, cex.lab=3, cex.axis=2.6, cex.names=2.4, cex.axis.names=2.4)
 # Close the device
 dev.off()
 
@@ -71,22 +70,14 @@ filtered_gwas_data <- gwas_data[gwas_data$`#CHROM` != 23, ]
 
 # Open a PNG device for the Manhattan plot
 png("Xg/xg_autosomes_all_1KG_manhattan_plot.png", width = 1600, height = 1000)
-par(cex.main=2, cex.lab=1.5, cex.axis=1.3, mar=c(6, 6, 6, 10))
+    par(cex.main=4, cex.lab=3, cex.axis=2.6, mar=c(6, 6, 6, 10))
 xg_manplot <- manhattan(filtered_gwas_data, chr="#CHROM", bp="POS", snp="ID", p="P", 
                         main="Manhattan Plot 1KG",
-                        ylim=c(0, ceiling(max(-log10(filtered_gwas_data$P), na.rm = TRUE))))
+                        ylim=c(0, ceiling(max(-log10(filtered_gwas_data$P), na.rm = TRUE))),
+                        cex.main=4, cex.lab=3, cex.axis=2.6, cex.names=2.4, cex.axis.names=2.4)
 dev.off()
 
 # ---- QQ plot with genomic inflation factor
-# Function to compute genomic inflation factor lambda
-calculate_lambda <- function(p_values) {
-    # Convert p-values to chi-squared statistics
-    chi_squared <- qchisq(1 - p_values, df = 1)
-    # Calculate lambda
-    lambda <- median(chi_squared, na.rm = TRUE) / qchisq(0.5, df = 1)
-    return(lambda)
-}
-
 # Calculate the maximum -log10(p-value) for the filtered data
 max_logp <- max(-log10(filtered_gwas_data$P), na.rm = TRUE)
 
@@ -123,30 +114,3 @@ subset_data_chrX <- gwas_data[gwas_data$P < threshold & gwas_data$`#CHROM` == 23
 
 # save subset_data_chrX to file
 write.table(subset_data_chrX, file = file.path(CUR_DIR,PATH_X_SNPS), sep = "\t", quote = FALSE, row.names = FALSE)
-
-
-# ---- ignore ----
-set.seed(12345)
-HapMap.subset <- subset(HapMap, CHR %in% 4:7)
-
-# for highlighting SNPs of interest
-significantSNP <- sample(HapMap.subset$SNP, 20)
-head(HapMap.subset)
-
-dim(HapMap.subset)
-
-qqly(HapMap.subset, snp = "SNP", gene = "GENE")
-
-volcanoly(HapMap.subset, snp = "SNP", gene = "GENE", effect_size = "EFFECTSIZE")
-
-manplot <- manhattanly(HapMap.subset, snp = "SNP", gene = "GENE",
-                        annotation1 = "DISTANCE", annotation2 = "EFFECTSIZE",
-                        highlight = significantSNP)
-
-# Convert to ggplot
-static_plot <- ggplotly(manplot)
-
-# Save using ggsave
-ggsave("manhattan_plot.png", static_plot, width = 10, height = 6, dpi = 300)
-
-saveWidget(manplot, "manhattan_plot.html")

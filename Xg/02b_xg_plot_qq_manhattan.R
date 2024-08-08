@@ -17,7 +17,7 @@ super_pops <- c("AFR", "AMR", "EAS", "EUR", "SAS")
 # Function to create plots
 create_plots <- function(super_pop) {
     # Define file paths
-    DIR_FILE <- file.path(base_directory, super_pop, "plink_results", paste0(super_pop, "_xg_gwas_combined_results.glm.firth"))
+    DIR_FILE <- file.path(base_directory, super_pop, "plink_results", paste0(super_pop, "_xg_gwas_combined_results.glm.firth.gz"))
     PATH <- file.path(getwd(), DIR_FILE)
     
     # Read GWAS data
