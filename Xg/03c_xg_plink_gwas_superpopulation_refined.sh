@@ -7,7 +7,7 @@ phenotypeFile="all_xg.tsv"
 colName="xg"
 
 # Define the super populations
-super_pops=("AFR" "AMR" "EAS" "EUR" "SAS")
+super_pops=("AFR" "AMR" "EAS" "EUR" "SAS" "all1kg")
 
 # Read the input file and extract chromosome and position information
 input_file="xg_autosomes_no_chrX_all_1KG_sig_snps.txt"
@@ -53,17 +53,37 @@ for super_pop in "${super_pops[@]}"; do
         echo -e "\nChromosome $chr, Position $pos.\n"
 
         # Filter the genotype data for the current super population and window
-        plink2 \
+        if [[ "$super_pop" != "all1kg" ]]; then
+            plink2 \
             --pfile "${genotypeFile}" vzs \
             --keep "${super_pop}_individuals.txt" \
             --pheno-name "${colName}" \
             --pheno "${phenotypeFile}" \
+            --geno 0.01 \
+            --hwe 1e-6 \
+            --maf 0.01 \
+            --mind 0.01 \
             --chr "$chr" \
             --from-bp "$from_bp" \
             --to-bp "$to_bp" \
             --glm dominant hide-covar firth \
             --out "${out}/xg_gwas_chr${chr}_${from_bp}_${to_bp}_${super_pop}_refined"
-        
+        else
+            plink2 \
+            --pfile "${genotypeFile}" vzs \
+            --pheno-name "${colName}" \
+            --pheno "${phenotypeFile}" \
+            --geno 0.01 \
+            --hwe 1e-6 \
+            --maf 0.01 \
+            --mind 0.01 \
+            --chr "$chr" \
+            --from-bp "$from_bp" \
+            --to-bp "$to_bp" \
+            --glm dominant hide-covar firth \
+            --out "${out}/xg_gwas_chr${chr}_${from_bp}_${to_bp}_${super_pop}_refined"
+        fi
+
         # Append the results to the combined output file
         # cat "${out}/xg_gwas_chr${chr}_${from_bp}_${to_bp}_${super_pop}_refined.xg.glm.dom" | tail -n +2 >> "$combined_output"
 

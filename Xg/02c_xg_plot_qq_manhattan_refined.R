@@ -6,7 +6,7 @@ library(data.table)
 
 # Define the base directory and super populations
 base_directory <- "Xg"
-super_pops <- c("AFR", "AMR", "EAS", "EUR", "SAS")
+super_pops <- c("AFR", "AMR", "EAS", "EUR", "SAS", "all1kg")
 
 # Calculate genomic inflation control lambda for QQ plot
 calculate_lambda <- function(p_values) {
@@ -29,9 +29,9 @@ create_plots <- function(super_pop) {
     file_list <- list.files(DIR_FILE, pattern = "\\.xg\\.glm\\.firth$", full.names = TRUE)
     
     # Debugging output
-    print(paste("DIR_FILE:", DIR_FILE))
-    print("file_list:")
-    print(file_list)
+    # print(paste("DIR_FILE:", DIR_FILE))
+    # print("file_list:")
+    # print(file_list)
     
     # Check if any files were found
     if (length(file_list) == 0) {
@@ -52,12 +52,16 @@ create_plots <- function(super_pop) {
     # Filter out rows where #CHROM is 23 for autosomes only plots
     filtered_gwas_data <- gwas_data[gwas_data$`#CHROM` != 23, ]
 
+    # filter out rows where P is NA
+    filtered_gwas_data <- filtered_gwas_data[!is.na(filtered_gwas_data$P), ]
+
     # Create Manhattan Plot for autosomes
     png(file.path(base_directory, super_pop, paste0(super_pop,"_xg_autosomes_all_1KG_manhattan_plot_refined.png")), width = 1600, height = 1000)
     par(cex.main=4, cex.lab=3, cex.axis=2.6, mar=c(6, 6, 6, 10))
-    manhattan(filtered_gwas_data, chr="#CHROM", bp="POS", snp="ID", p="P", 
+    manhattan(filtered_gwas_data, chr="#CHROM", bp="POS", snp="ID", p="P",
+            chrlabs = c(1,3,7,11,14,19),
             main=paste("Manhattan Plot 1KG - Autosomes -", super_pop),
-            ylim=c(0, ceiling(max(-log10(filtered_gwas_data$P), na.rm = TRUE))),
+            ylim = c(0, max(ceiling(max(-log10(filtered_gwas_data$P), na.rm = TRUE)), 8)),
             cex.main=4, cex.lab=3, cex.axis=2.6, cex.names=2.4, cex.axis.names=2.4)
     dev.off()
 
