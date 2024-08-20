@@ -5,6 +5,7 @@
 
 # sequence data
 *.vcf
+*.bgz
 *.gz
 *.tbi
 
@@ -29,4 +30,3 @@
 ignore/
 plink_1KG/
 plink_results/
-biobank/

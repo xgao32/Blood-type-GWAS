@@ -1,0 +1,30 @@
+#!/bin/bash
+#PBS -N validate_sg10k
+#PBS -l select=1:ncpus=1:mem=20GB
+#PBS -j oe
+
+cd $PBS_O_WORKDIR; # necessary line do not change
+np=$(cat ${PBS_NODEFILE} | wc -l); # count number of cores, use only for multi-threaded applications
+
+source /app1/ebenv
+module load bcftools
+
+#### validate VCF files ####
+DIRECTORY="/hpctmp/xgao32/sg10k/Downloads"
+
+# Iterate over each .vcf.bgz file in the directory
+for file in "$DIRECTORY"/*.vcf.bgz; do
+    if [[ -f "$file" ]]; then
+        echo "Validating $file..."
+        # Validate the file using bcftools
+        if bcftools view "$file" > /dev/null 2>&1; then
+            echo "File $file is valid."
+        else
+            echo "File $file is invalid."
+        fi
+    else
+        echo "No .vcf.bgz files found in the directory."
+    fi
+done
+
+exit 0 
