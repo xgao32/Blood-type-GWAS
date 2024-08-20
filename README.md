@@ -12,7 +12,7 @@
   1. alternate methods : multiplex Taqman PCR, sequencing
   2. potential challenges with homologous genes that are almost identical like RHD and RHCE, require long read sequencing to distinguish reads between the two genes
 
-### use `renv` to manage R packages for this repository
+### 3. use `renv` to manage R packages for this repository
 Activate specific version of R on NUS HPC.
 
 ```sh
@@ -41,3 +41,61 @@ renv::snapshot() # creat renv.lock file to save package versions
 renv::restore() # install all packages in renv.lock file 
 ```
 
+### 4. Organization 
+`scripts` folder will contain all the necessary scripts to do certain things. 
+
+```
+Blood-type-GWAS/
+├── README.md
+├── biobank # this folder is gitignored
+|   |-- sg10k
+|   |-- thousandgenomes
+|   |__ ... other biobank
+├── scripts/
+│   ├── preprocess/
+│   │   ├── preprocess_data.sh
+│   │   └── ...
+│   ├── gwas/
+│   │   ├── perform_gwas.sh
+│   │   └── ...
+│   ├── figures/
+│   │   ├── create_manhattan_plot.sh
+│   │   └── ...
+│   └── results/
+│       ├── summarize_results.sh
+│       └── ...
+├── result_folder_for_some_biobank_data/
+│   ├── run_scripts.sh # single shell script to run the whole workflow using scripts in the `scripts`
+|       directory and generate results
+|   |-- data/ # symlink folder to biobank data
+|       |-- filtered_data/
+|   |-- gwas_results/
+│   └── figures/
+└── renv.lock
+```
+
+
+### 5. Submitting NUS HPC jobs
+[Details](https://nusit.nus.edu.sg/technus/understand-pbs-job-submission-in-hpc-cloud/))
+
+Bare minimum script to use `qsub`
+```sh
+#!/bin/bash
+
+#PBS -N name_of_job
+#PBS -l select=1:ncpus=1
+
+## default allocation select=1:ncpus=1:mem=1950mb:mpiprocs=1:ompthreads=1
+## wall time limit determined by queue which is allocated by PBS, most queue 24 hours
+
+## additional fields
+#PBS -M {email address to notify of job}
+#PBS -q {name of the queue, use normal for NSCC and let PBS scheduler assign queue}
+#PBS -l select={# nodes}:ncpus={# cpus}:mem={# of memory allocated in Gb}gb
+#PBS -l walltime=HH:MM:SS
+
+## comment with 2 # 
+
+cd ${PBS_O_WORKDIR};   ## this line is needed, do not delete. Change current working directory to directory where job is submitted
+
+```
