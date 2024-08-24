@@ -8,6 +8,9 @@
 *.bgz
 *.gz
 *.tbi
+*.bgen
+*.pgen
+*.pvar
 
 # plink output
 *.csi
@@ -22,6 +25,8 @@
 *.map
 .nf*
 *.pdf
+*.in
+*.out
 
 # vs code configuration
 *.vscode

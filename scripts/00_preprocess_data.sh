@@ -21,7 +21,7 @@ echo -e "\n $input_dir , $flag \n"
 # 0 for VCF, 1 for pgen
 if [ $flag -eq 0 ]; then
     # iterating over all VCF files in the input directory
-    for file in "$input_dir"/*.vcf.gz; do
+    for file in "$input_dir"/*.vcf{.gz,.bgz}; do
         echo -e "\n processing ${file} \n"
         plink2 \
             --vcf "$file" \
