@@ -11,6 +11,8 @@
 *.bgen
 *.pgen
 *.pvar
+*.psam
+*.zst
 
 # plink output
 *.csi

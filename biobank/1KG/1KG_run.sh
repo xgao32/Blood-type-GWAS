@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#PBS -l select=1:ncpus=1 ## other options set by default
+
+cd $PBS_O_WORKDIR; ## This line is needed, do not modify.
+
+source /app1/ebenv
+module load plink/2.0
+
 # Set the path to the directory containing the scripts
 SCRIPTS_DIR="/hpctmp/xgao32/Blood-type-GWAS/scripts"
 

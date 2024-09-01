@@ -1,6 +1,6 @@
 #!/bin/bash
-#PBS -N validate_sg10k
-#PBS -l select=1:ncpus=1:mem=20GB
+#PBS -N validate_sg10k_atlas8
+#PBS -l select=1:ncpus=1
 #PBS -j oe
 
 cd $PBS_O_WORKDIR; # necessary line do not change
@@ -10,7 +10,7 @@ source /app1/ebenv
 module load bcftools
 
 #### validate VCF files ####
-DIRECTORY="/hpctmp/xgao32/sg10k/Downloads"
+DIRECTORY="$PWD/Downloads"
 
 # Iterate over each .vcf.bgz file in the directory
 for file in "$DIRECTORY"/*.vcf.bgz; do
