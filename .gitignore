@@ -11,7 +11,7 @@
 *.bgen
 *.pgen
 *.pvar
-*.psam
+#*.psam # allow psam files to be tracked, contains phenotype information for each sample
 *.zst
 
 # plink output
@@ -20,7 +20,7 @@
 *.bed
 *.tped
 *.log
-*.fam
+*.fam 
 *.ped
 *.nosex
 *.tfam
@@ -36,4 +36,4 @@
 # folders to ignore
 ignore/
 plink_1KG/
-plink_results/
+plink_results/*.fam

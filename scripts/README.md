@@ -8,7 +8,7 @@ This folder contains all relevant scripts for processing data, doing analysis, m
     - output: null  
     - description: This script generates a subdirectory in the directory where the original data is located containing all processed data files that have filtered out variants not meeting QC. QC standards are arbitrary, may need to modify for working with data from genotyping studies.
 
-2. `01_phenotype.sh`  
+2. `01_generate_phenotype.sh`  
     - input: directory to raw unprocessed data  
     - output: a single file in the `phenotype` folder to keep track of phenotypes of interest for all samples in the biobank with the following headers. The FID, IID, and phenotype columns are mandatory.  
     - description: This script performs some operations on the raw unprocessed data to generate a single file in the `phenotype` folder that contains the phenotypes of interest for all samples in the biobank.
