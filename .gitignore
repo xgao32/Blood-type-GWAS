@@ -37,3 +37,5 @@
 ignore/
 plink_1KG/
 plink_results/*.fam
+biobank/1KG/phase3_grch37/filtered_vcf/
+*.fam

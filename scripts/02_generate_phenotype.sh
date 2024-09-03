@@ -53,7 +53,8 @@ pos=${chrom_pos#*:}
 # only code homozygotes, 1 for control, 2 for cases, -9 or 0 for no phenotype/hetereozygotes
 
 # Extract genotype information from the VCF file
-bcftools query -f '%GT\n' -r "$chrom_pos" "$VAR_FILE" > genotypes.txt # temporary file with one genotype per line corresponding to sample in VCF file
+#bcftools query -f '%GT\n' -r "$chrom_pos" "$VAR_FILE" > genotypes.txt # temporary file with one genotype per line corresponding to sample in VCF file
+bcftools query -f '[%GT\n]' -r "$chrom_pos" "$VAR_FILE" | tr ' ' '\n'> genotypes.txt # chromosome:position is essential, just position will return nothing
 
 # Check if the genotypes.txt file is empty
 if [ ! -s genotypes.txt ]; then
@@ -61,8 +62,8 @@ if [ ! -s genotypes.txt ]; then
     exit 1
 fi
 
-# add a new column to the PSAM_FILE and make all the entries have a value of -9 and name that column O
-awk -v OFS='\t' 'NR==1 {print $0, "O"} NR>1 {print $0, -9}' "$PSAM_FILE" > "${PSAM_FILE}.tmp"
+# add a new column to the PSAM_FILE and make all the entries have a value of -9 and name that column
+awk -v OFS='\t' 'NR==1 {print $0, $type} NR>1 {print $0, -9}' "$PSAM_FILE" > "${PSAM_FILE}.tmp"
 
 # Read the genotypes and update the PSAM_FILE.tmp
 awk -v OFS='\t' 'NR==FNR {genotypes[FNR]=$1; next} NR>1 {if (genotypes[FNR-1] == "0|0") $NF=1; else if (genotypes[FNR-1] == "1|1") $NF=2} 1' genotypes.txt "${PSAM_FILE}.tmp" > "${PSAM_FILE}.updated"
