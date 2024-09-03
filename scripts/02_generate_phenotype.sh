@@ -20,6 +20,8 @@ flag=$(($flag))  # convert flag to a numerical variable
 
 echo -e "\n $PSAM_FILE , $VAR_FILE , $flag \n"
 
+
+#### TO BE REPLACED BY AUTOMATIC SCRIPT ####
 # Declare an associative array to store genetic variant mappings to GRCh37 coordinates
 declare -A ABO_variant_grch37_map
 declare -A ABO_phenotype_variant_map # map phenotype to genetic variant
@@ -32,10 +34,8 @@ declare -A XG_phenotype_variant_map
 ABO_phenotype_variant_map["O"]="261delG"
 ABO_variant_grch37_map["261delG"]="9:136132908"
 
-
 XG_phenotype_variant_map["xg"]="rs311103" # promoter SNP
 XG_variant_grch37_map["rs311103"]="X:2666384"
-
 
 type="xg"
 variant="rs311103"
@@ -47,13 +47,12 @@ pos=${chrom_pos#*:}
 #chrom_pos=${ABO_variant_grch37_map[$variant]}
 #pos=${chrom_pos#*:}  # Extract the position after the colon
 
-#echo "The chromosome and position for ABO type $type genetic variant $variant is $chrom_pos"
+echo -e "\nThe chromosome and position for type $type genetic variant $variant is $chrom_pos\n"
 
-# add additional columns for each phenotype
 # only code homozygotes, 1 for control, 2 for cases, -9 or 0 for no phenotype/hetereozygotes
 
 # Extract genotype information from the VCF file
-#bcftools query -f '%GT\n' -r "$chrom_pos" "$VAR_FILE" > genotypes.txt # temporary file with one genotype per line corresponding to sample in VCF file
+# temporary file with one genotype per line corresponding to samples in VCF file
 bcftools query -f '[%GT\n]' -r "$chrom_pos" "$VAR_FILE" | tr ' ' '\n'> genotypes.txt # chromosome:position is essential, just position will return nothing
 
 # Check if the genotypes.txt file is empty
@@ -63,16 +62,19 @@ if [ ! -s genotypes.txt ]; then
 fi
 
 # add a new column to the PSAM_FILE and make all the entries have a value of -9 and name that column
-awk -v OFS='\t' 'NR==1 {print $0, $type} NR>1 {print $0, -9}' "$PSAM_FILE" > "${PSAM_FILE}.tmp"
+# awk -v OFS='\t' 'NR==1 {print $0, "$type"} NR>1 {print $0, -9}' "$PSAM_FILE" > "${PSAM_FILE}.tmp"
+awk -v OFS='\t' -v type="$type" 'NR==1 {print $0, type; next} {print $0, -9}' "$PSAM_FILE" > "${PSAM_FILE}.tmp"
 
 # Read the genotypes and update the PSAM_FILE.tmp
 awk -v OFS='\t' 'NR==FNR {genotypes[FNR]=$1; next} NR>1 {if (genotypes[FNR-1] == "0|0") $NF=1; else if (genotypes[FNR-1] == "1|1") $NF=2} 1' genotypes.txt "${PSAM_FILE}.tmp" > "${PSAM_FILE}.updated"
 
 # Remove the temporary file
-rm "${PSAM_FILE}.tmp"
+# rm "${PSAM_FILE}.tmp"
 
 # Clean up
 # rm genotypes.txt
 
 # Optionally, you can replace the original file with the new file
 #mv "${PSAM_FILE}.tmp" "$PSAM_FILE"
+
+#### 
