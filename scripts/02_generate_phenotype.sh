@@ -37,8 +37,17 @@ declare -A phenotype_variant_map # map phenotype to genetic variant
 phenotype_variant_map["O"]="261delG"
 variant_grch37_map["261delG"]="9:136132908"
 
-phenotype_variant_map["xg"]="rs311103" # promoter SNP
+phenotype_variant_map["xg"]="rs311103" # Xg +/-, promoter SNP
 variant_grch37_map["rs311103"]="X:2666384"
+
+phenotype_variant_map["Yt"]="1057C>A"  # Yt a/b
+variant_grch37_map["1057C>A"]="7:100490797"
+
+phenotype_variant_map["Jk"]="838A>G"  # Kidd a/b
+variant_grch37_map["838A>G"]="18:43319519"
+
+phenotype_variant_map["Fy"]="125G>A" # Duffy 1/2
+variant_grch37_map["125G>A"]="1:159175354"
 
 #type="xg"
 #variant="rs311103"
@@ -51,7 +60,7 @@ variant_grch37_map["rs311103"]="X:2666384"
 #pos=${chrom_pos#*:}  # Extract the position after the colon
 
 # list of blood types
-bloodtypes=("O" "xg")
+bloodtypes=("O" "xg" "Yt" "Jk" "Fy")
 
 # Iterate over the types
 for type in "${bloodtypes[@]}"; do
@@ -61,7 +70,7 @@ for type in "${bloodtypes[@]}"; do
     variant=${phenotype_variant_map[$type]}
     chrom_pos=${variant_grch37_map[$variant]}
     pos=${chrom_pos#*:}  # Extract the position after the colon
-    chrom=${chrom_pos%:*} # Extract the chromosome beore the semicolon
+    chrom=${chrom_pos%:*} # Extract the chromosome beore the colon
 
     echo -e "\nThe chromosome and position for type $type genetic variant $variant is $chrom_pos\n"
 
