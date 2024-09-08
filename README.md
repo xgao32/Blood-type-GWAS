@@ -1,13 +1,13 @@
 # Blood-type-GWAS
 ## Objective
-### 1. identify tag SNPs in linkage disequilibrium with causative variants that result in the different blood types (1k-10k per blood type) 
-  1. perform GWAS using blood type as phenotype of interest to find non-overlapping SNPs associated with blood type (ideally SNPs are associated with one blood type instead of multiple blood types)
+### 1. identify tag SNPs in linkage disequilibrium with causative variants that result in the different blood types (1k-10k tag SNPs per blood type) 
+  1. perform GWAS using blood type as phenotype of interest to find non-overlapping SNPs associated with blood type (ideally SNPs are associated with one blood type instead of with multiple blood types)
   2. check GWAS catalog to identify tag SNPs already known to be in LD with causative variants
   3. create database for tag SNPs and blood types 
     1. decide on where to store database and VCF files
-    2. currently all VCF files on NUS HPC under `/hpctmp/xgao32/{name of biobank where VCF files came from}`
+    2. currently all VCF files on NUS HPC under `/hpctmp/xgao32/Blood-type-GWAS/biobank/{name of biobank where VCF files came from}`
   4. identify haplotypes associated with blood types by making use of tag SNPs
-  5. infer blood type at the chromosome level to augment existing biobank VCF data
+  5. infer blood type at the chromosome/haplotype level 
 ### 2. predict blood group based on SNPs/haplotypes 
   1. alternate methods : multiplex Taqman PCR, sequencing
   2. potential challenges with homologous genes that are almost identical like RHD and RHCE, require long read sequencing to distinguish reads between the two genes
@@ -49,21 +49,17 @@ Blood-type-GWAS/
 ├── README.md
 ├── biobank # this folder is gitignored
 |   |-- sg10k
-|   |-- thousandgenomes
+|   |-- 1KG
 |   |__ ... other biobank
 ├── scripts/
-│   ├── preprocess/
-│   │   ├── preprocess_data.sh
+│   ├── preprocess_data.sh
 │   │   └── ...
-│   ├── gwas/
-│   │   ├── perform_gwas.sh
+│   |── gwas.sh
 │   │   └── ...
-│   ├── figures/
-│   │   ├── create_manhattan_plot.sh
-│   │   └── ...
-│   └── results/
-│       ├── summarize_results.sh
-│       └── ...
+│   ├── plots.R
+│   │   
+│   │  
+│   └── ... other scripts
 ├── result_folder_for_some_biobank_data/
 │   ├── run_scripts.sh # single shell script to run the whole workflow using scripts in the `scripts`
 |       directory and generate results
