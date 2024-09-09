@@ -1,5 +1,6 @@
 #!/usr/bin/awk -f
 
+# script to print out all genes under the column "Gene" in input.tsv
 # Usage: awk -f script.awk input.tsv
 
 BEGIN {
