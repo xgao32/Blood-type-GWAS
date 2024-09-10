@@ -23,13 +23,13 @@ NR > 1 {
     # Determine Variant Type using GRCh37 Coordinates
     if ($3 ~ /:g\.[0-9]+[ACGT]>[ACGT]$/) {
         variant_type = "SNP"
-    } else if ($3 ~ /:g\.[0-9]+_[0-9]+ins[ACGT]+$/) {
+    } else if ($3 ~ /:g\.[0-9]+_[0-9]+ins[ACGT]+/) { # Corrected regex
         variant_type = "Insertion"
-    } else if ($3 ~ /:g\.[0-9]+_[0-9]+del[ACGT]+$/) {
+    } else if ($3 ~ /:g\.[0-9]+_[0-9]+del[ACGT]*[^ACGT]+/) { # Corrected regex
         variant_type = "Deletion"
-    } else if ($3 ~ /:g\.[0-9]+_[0-9]+delins[ACGT]+$/) {
+    } else if ($3 ~ /:g\.[0-9]+_[0-9]+delins[ACGT]+/) { # Corrected regex
         variant_type = "Delins"
-    } else if ($3 ~ /:g\.[0-9]+dup[ACGT]+$/) {
+    } else if ($3 ~ /:g\.[0-9]+dup[ACGT]+/) { # Corrected regex
         variant_type = "Duplication"
     } else {
         variant_type = "Unknown"
