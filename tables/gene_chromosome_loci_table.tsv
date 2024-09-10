@@ -27,7 +27,6 @@ LW                 	ICAM4    	        19 	19p13.3
 CH/RG              	C4A      	         6 	6p21.33
 CH/RG              	C4B      	         6 	6p21.33
 H                  	FUT1     	        19 	19q13.33
-H                  	FUT2     	        19 	19q13.33
 KX                 	XK       	        23 	Xp21.1
 GE                 	GYPC     	         2 	2q14.1
 CROM               	CD55     	         1 	1q32.2
@@ -47,4 +46,4 @@ CD59               	CD59     	        11 	11p13
 PEL                	ABCC4    	        13 	13q32.1
 FOR                	GBGT1    	         9 	9q34.2
 AUG                	SLC29A1  	         6 	6p21.1
-SID                	B4GALNT2  	         17 	17q21.32
+SID                	B4GALNT2 	        17 	17q21.32

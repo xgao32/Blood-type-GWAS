@@ -1,3 +1,3 @@
-This folder contains some kind of scrapped pdf output from the ISBT blood group allele tables. Several files are actually VCF files.
+This folder contains some kind of scrapped pdf output from the ISBT blood group allele tables. It is copied from the alicloud server directory `root/standard/ISBTdb` . Several files are VCF files without the headers.
 
 The content of most of the `.typ` files are table separated value format with columns for Phenotype                               	Allele name 	Nucleotide change   	Exon 	Predicted amino acid change 
