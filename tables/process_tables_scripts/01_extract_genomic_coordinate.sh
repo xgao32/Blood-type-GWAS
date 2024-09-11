@@ -21,16 +21,16 @@ BEGIN {
 # Processing input file (skip header)
 NR > 1 {
     # Determine Variant Type using GRCh37 Coordinates
-    if ($3 ~ /:g\.[0-9]+[ACGT]>[ACGT]$/) {
+    if ($3 ~ />[ACGT]$/) { # Simplified SNP check
         variant_type = "SNP"
-    } else if ($3 ~ /:g\.[0-9]+_[0-9]+ins[ACGT]+/) { # Corrected regex
-        variant_type = "Insertion"
-    } else if ($3 ~ /:g\.[0-9]+_[0-9]+del[ACGT]*[^ACGT]+/) { # Corrected regex
-        variant_type = "Deletion"
-    } else if ($3 ~ /:g\.[0-9]+_[0-9]+delins[ACGT]+/) { # Corrected regex
-        variant_type = "Delins"
-    } else if ($3 ~ /:g\.[0-9]+dup[ACGT]+/) { # Corrected regex
+    } else if ($3 ~ /dup/) { 
         variant_type = "Duplication"
+    } else if ($3 ~ /del/) { 
+        variant_type = "Deletion"
+    } else if ($3 ~ /ins/) { 
+        variant_type = "Insertion"
+    } else if ($3 ~ /delins/) { 
+        variant_type = "Delins"
     } else {
         variant_type = "Unknown"
     }
