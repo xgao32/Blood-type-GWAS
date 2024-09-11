@@ -6,13 +6,12 @@
 # 2. compute haplotype frequencies, doesnt work n PLINK 1.9 or 2.0
 # plink --bfile xg_variant --hap --hap-freq --out xg_haplotype_frequencies
 
-# extract list of positions from bim file
-awk '{print $1 ":" $4}' /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/filtered_vcf/ALL.chrX.filtered.bim > xg_chrX_positions.txt
-
+# extract list of positions from bim file, duplicate lines exist because of multiple variants at same position
+awk '!seen[$1 ":" $4]++ {print $1 ":" $4}' /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/filtered_vcf/ALL.chrX.filtered.bim > xg_chrX_positions.txt
 
 # compute LD between a given snp and all variants in bed/bim/fam file passing filter
 # why not working????
-:'
+<<'COMMENT'
 plink2 --pfile /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/all_phase3 vzs \
       --chr X \
       --geno 0.01 \
@@ -26,7 +25,8 @@ plink2 --pfile /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/all_phase3 vzs \
       --ld-snps 23:2666384 \
       --out xg_ld_results
 '
-
+COMMENT
+# compute LD for all variants in a given bed/bim/fam file
 
 plink --bfile /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/filtered_vcf/ALL.chrX.filtered \
       --r2 in-phase with-freqs \
@@ -34,3 +34,13 @@ plink --bfile /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/filtered_
       --ld-window-kb 1000000 \
       --ld-snp-list xg_chrX_positions.txt \
       --out xg_ld_results
+
+<<'COMMENT'
+# compute LD for a single variant against all variants in bed/bim/fam file
+plink --bfile /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/filtered_vcf/ALL.chrX.filtered \
+      --r2 in-phase with-freqs \
+      --ld-window 999999 \
+      --ld-window-kb 1000000 \
+      --ld-snp 23:2666384 \
+      --out xg_ld_results
+COMMENT
