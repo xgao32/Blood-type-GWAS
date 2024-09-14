@@ -19,4 +19,8 @@ echo "23:2666384" >> $output_file1
 # Append the new entry for GRCh38
 echo "23:2748343" >> $output_file2
 
+# Create a temporary file, then move it back to the original file
+awk '!seen[$0]++' $output_file1 > ${output_file1}.tmp && mv ${output_file1}.tmp $output_file1
+awk '!seen[$0]++' $output_file2 > ${output_file2}.tmp && mv ${output_file2}.tmp $output_file2
+
 echo "Variants to keep files created: $output_file1 and $output_file2"

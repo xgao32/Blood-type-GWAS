@@ -3,15 +3,18 @@
 # script to add ID to vcf file and make index file in csi format, remove variants with duplicate ID
 # process index file
 
-for chr in {22..22}; do
+for chr in {22..23}; do
 
     # if chr == 23, process chr X
     if [ $chr -eq 23 ]; then
         echo "Processing chromosome X"
         if [ ! -f ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz ]; then
             bcftools annotate --set-id '%CHROM:%POS' /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/original_data/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz -Oz -o chr23.vcf.gz # add ID
+            echo "done adding ID"
             bcftools norm -d none -o chr23.vcf.gz -Oz chr23.vcf.gz # remove variants with duplicate ID
+            echo "done removing duplicates"
             bcftools index chr23.vcf.gz
+            echo "done indexing"
         else
             echo "file already exists for chromosome X. Skipping..."
         fi
@@ -19,8 +22,11 @@ for chr in {22..22}; do
         echo "Processing chromosome $chr"
         if [ ! -f ALL.chr$chr.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz ]; then
             bcftools annotate --set-id '%CHROM:%POS' /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/original_data/ALL.chr$chr.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz -Oz -o chr$chr.vcf.gz
+            echo "done adding ID"
             bcftools norm -d none -o chr$chr.vcf.gz -Oz chr$chr.vcf.gz # remove variants with duplicate ID
+            echo "done removing duplicates"
             bcftools index chr$chr.vcf.gz
+            echo "done indexing"
         else
             echo "file already exists for chromosome $chr. Skipping..."
         fi
