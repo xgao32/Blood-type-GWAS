@@ -4,7 +4,8 @@
 
 # Create output directory if it doesn't exist
 mkdir -p ../filtered_vcf
-grch37_variants_to_keep="/hpctmp/xgao32/Blood-type-GWAS/tables/proxy_assoc/x_snplist.snplist" #"/hpctmp/xgao32/Blood-type-GWAS/tables/process_tables_scripts/grch37_variants_to_keep.txt"
+grch37_variants_to_keep="/hpctmp/xgao32/Blood-type-GWAS/tables/process_tables_scripts/grch37_variants_to_keep.txt"
+#"/hpctmp/xgao32/Blood-type-GWAS/tables/proxy_assoc/x_snplist.snplist" #"/hpctmp/xgao32/Blood-type-GWAS/tables/process_tables_scripts/grch37_variants_to_keep.txt"
 
 echo -e "\n convert vcf file to bed/bim/fam, keep only biallelic variants, prune in/out files use CHR:POS:REF:ALT as ID, SNP pruning use phasing information, 
 filter out variants with missing rate > 0.01, not in Hardy-Weinberg equilibrium, minor allele frequency < 0.01, variants in 1000 SNP window with r^2 less than 0.2 \n"
@@ -12,7 +13,7 @@ filter out variants with missing rate > 0.01, not in Hardy-Weinberg equilibrium,
 for chr in {23..23}; do
     
     echo "Processing chromosome $chr"
-    input_file="chr$chr.vcf.gz"
+    input_file="chr$chr.dedup.vcf.gz"
     
     # Step 1: Perform QC Steps and Generate Filtered Dataset
     plink \
@@ -24,7 +25,9 @@ for chr in {23..23}; do
         --indep-pairphase 1000 100 0.2 \
         --biallelic-only strict \
         --make-bed \
-        --out filtered_vcf/ALL.chr$chr.filtered
+        --out ../filtered_vcf/chr$chr.dedup.filtered
+
+    echo "made QC steps for chromosome $chr\n"
     
     ## Step 2: Extract Specific Variants to Include and Merge with the Filtered Dataset
     plink \
@@ -32,16 +35,17 @@ for chr in {23..23}; do
         --extract $grch37_variants_to_keep \
         --biallelic-only strict \
         --make-bed \
-        --out filtered_vcf/ALL.chr$chr.variants_to_keep
+        --out ../filtered_vcf/chr$chr.dedup.variants_to_keep
+    echo "extracted variants to keep for chromosome $chr\n"
 
     ## Step 3: Merge bed files
     plink \
-        --bfile filtered_vcf/ALL.chr$chr.filtered \
-        --bmerge filtered_vcf/ALL.chr$chr.variants_to_keep \
+        --bfile ../filtered_vcf/chr$chr.dedup.filtered \
+        --bmerge ../filtered_vcf/chr$chr.dedup.variants_to_keep \
         --make-bed \
-        --out filtered_vcf/chr$chr.final
+        --out ../filtered_vcf/chr$chr.final
+    echo "merged bed files for chromosome $chr\n"
 done
-
 
 # ignore 
 <<'COMMENT'
