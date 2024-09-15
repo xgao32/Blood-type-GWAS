@@ -15,18 +15,17 @@
 
 # PLINK 2 HAS DIFFERENT FLAG DEFAULT BEHAVIORS
 
-for chr in {23..23}; do
+for chr in {9..9}; do
 
     input_file=../filtered_vcf/chr$chr.final
     echo "\nProcessing chromosome $chr\n"
 
     plink \
         --bfile $input_file \
-        --ld-snp 23:2666384 \
+        --ld-snp 9:136132908 \
         --r2 dprime 'in-phase' 'with-freqs' 'yes-really' \
         --ld-window 1000000000 \
         --ld-window-kb 1000000000 \
-        --ld-xchr 1 \
         --ld-window-r2 0.0 \
         --out chr$chr.ld
 
