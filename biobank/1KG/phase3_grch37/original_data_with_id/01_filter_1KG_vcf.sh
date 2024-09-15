@@ -10,7 +10,7 @@ grch37_variants_to_keep="/hpctmp/xgao32/Blood-type-GWAS/tables/process_tables_sc
 echo -e "\n convert vcf file to bed/bim/fam, keep only biallelic variants, prune in/out files use CHR:POS:REF:ALT as ID, SNP pruning use phasing information, 
 filter out variants with missing rate > 0.01, not in Hardy-Weinberg equilibrium, minor allele frequency < 0.01, variants in 1000 SNP window with r^2 less than 0.2 \n"
 
-for chr in {23..23}; do
+for chr in {9..9}; do
     
     echo "Processing chromosome $chr"
     input_file="chr$chr.dedup.vcf.gz"

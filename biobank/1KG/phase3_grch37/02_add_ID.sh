@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#### DOES NOT WORK, SWITCH TO MODIFYING BIM FILE VARIANT ID DIRECTLY ####
+#### DOES NOT WORK ####
 
 # script to remove variants sharing same position and assign ID in VCF 
 mkdir -p filtered_vcf

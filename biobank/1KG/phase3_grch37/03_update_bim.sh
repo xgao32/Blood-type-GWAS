@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#### OLD SCRIPT TO UPDATE ID ENTRIES IN BIM FILE, DO NOT USE ####
+
 input_file="$1" #"/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/filtered_vcf/ALL.chrX.filtered.bim"
 output_file="$2" #"/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/filtered_vcf/ALL.chrX.filtered.bim"
 
