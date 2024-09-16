@@ -3,7 +3,8 @@
 #PBS -l select=1:ncpus=1:mem=20GB
 #PBS -j oe
 
-## did not work correctly
+#### FAILED TO VALIDATE VCF FILE ####
+
 cd $PBS_O_WORKDIR; # necessary line do not change
 np=$(cat ${PBS_NODEFILE} | wc -l); # count number of cores, use only for multi-threaded applications
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# does not work, sg10k only allow point and click download directly from CHORUS website
+#### does not work, sg10k only allow point and click download directly from CHORUS website ####
 
 # download sg10k data 9,770 genomes - 179,418,917 sites
 # The NPM SG10K_Health aggregated variant dataset (SG10K_Health_r5.3) is available for download as bgzip-compressed VCF formatted files.
@@ -8,7 +8,7 @@
 # and/or sex (Male, Female), aggregated Allele Frequencies (AF),
 # Allele Counts (AC) and Allele Numbers (AN) information are embedded in the VCF’s INFO fields (Annex A). 
 # The minor allele counts smaller than 5 are clipped to 5 (and cognate allele frequencies are calculated accordingly).
-:'
+<<COMMENT  
 for chr in {1..22}; do
     # Example URL for chromosome 1, replace with actual URL pattern
         echo "Processing number $chr"
@@ -16,9 +16,9 @@ for chr in {1..22}; do
         wget -c https://sg10k-health-releases-lambdaobjectaccesspoint-046503905558.s3-object-lambda.ap-southeast-1.amazonaws.com/SG10K_Health_r5.3/n9770/vcf/SG10K_Health_r5.3.2.sites.chr${chr}.vcf.bgz.tbi
 done
 
-#wget -c https://sg10k-health-releases-lambdaobjectaccesspoint-046503905558.s3-object-lambda.ap-southeast-1.amazonaws.com/SG10K_Health_r5.3/n9770/vcf/SG10K_Health_r5.3.2.sites.chrX.vcf.bgz
-#wget -c https://sg10k-health-releases-lambdaobjectaccesspoint-046503905558.s3-object-lambda.ap-southeast-1.amazonaws.com/SG10K_Health_r5.3/n9770/vcf/SG10K_Health_r5.3.2.sites.chrX.vcf.bgz.tbi
-'
+wget -c https://sg10k-health-releases-lambdaobjectaccesspoint-046503905558.s3-object-lambda.ap-southeast-1.amazonaws.com/SG10K_Health_r5.3/n9770/vcf/SG10K_Health_r5.3.2.sites.chrX.vcf.bgz
+wget -c https://sg10k-health-releases-lambdaobjectaccesspoint-046503905558.s3-object-lambda.ap-southeast-1.amazonaws.com/SG10K_Health_r5.3/n9770/vcf/SG10K_Health_r5.3.2.sites.chrX.vcf.bgz.tbi
+COMMENT
 
 echo -e "\n downloading \n"
 #USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
