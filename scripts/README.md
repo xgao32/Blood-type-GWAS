@@ -1,6 +1,6 @@
-# scripts
 This folder contains all relevant scripts for processing data, doing analysis, making figures. How the data was downloaded itself are to be found in some script or readme.md in the original data folder.
 
+## Files
 1. `00_preprocess_data.sh`  
     - input:   
         - `input_dir`: path to directory of VCF files or pgen/pvar/psam files  

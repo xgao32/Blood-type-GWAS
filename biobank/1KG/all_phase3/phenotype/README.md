@@ -8,8 +8,8 @@ This directory contains phenotype and genotype data related to blood types from 
 ## Files
 
 * **00_compute_frequencies_superpopulation.sh:** Bash script to calculate blood type allele frequencies in superpopulations.
-* **all_phase3.psam.phenotype.psam:** Sample information and blood type phenotypes (potentially an earlier version).
-* **all_phase3.psam.phenotype.psam.updated:** Updated sample information and blood type phenotypes.
+* **all_phase3.psam.phenotype.psam:** Sample information.
+* **all_phase3.psam.phenotype.psam.updated:** Updated sample information with inferred blood type.
 * **Fy.genotypes.txt:** Genotype data for the Duffy blood group system.
 * **Jk.genotypes.txt:** Genotype data for the Kidd blood group system.
 * **O.genotypes.txt:** Genotype data for the ABO blood group system.
