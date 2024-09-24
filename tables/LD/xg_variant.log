@@ -1,0 +1,25 @@
+PLINK v1.90b6.7 64-bit (2 Dec 2018)
+Options in effect:
+  --make-bed
+  --out xg_variant
+  --vcf xg_variant.vcf
+
+Hostname: atlas9-c01
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/tables
+Start time: Wed Sep 11 00:24:58 2024
+
+Random number seed: 1725985498
+191835 MB RAM detected; reserving 95917 MB for main workspace.
+--vcf: xg_variant-temporary.bed + xg_variant-temporary.bim +
+xg_variant-temporary.fam written.
+1 variant loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to xg_variant.nosex .
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+1 variant and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to xg_variant.bed + xg_variant.bim + xg_variant.fam ... done.
+
+End time: Wed Sep 11 00:24:58 2024

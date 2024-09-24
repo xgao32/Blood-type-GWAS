@@ -1,0 +1,16 @@
+PLINK v1.90b6.7 64-bit (2 Dec 2018)
+Options in effect:
+  --bfile /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/filtered_vcf/ALL.chrX.filtered
+  --chr
+  --out snplist
+  --pos
+  --write-snplist
+
+Hostname: atlas7-c10.hpc.local
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/tables/proxy_assoc
+Start time: Fri Sep 13 00:51:53 2024
+
+Error: --chr requires at least one value.
+For more information, try 'plink --help [flag name]' or 'plink --help | more'.
+
+End time: Fri Sep 13 00:51:53 2024

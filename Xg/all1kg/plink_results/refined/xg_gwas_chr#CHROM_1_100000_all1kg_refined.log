@@ -1,0 +1,19 @@
+PLINK v2.00a1LM 64-bit Intel (11 Feb 2018)
+Options in effect:
+  --chr #CHROM
+  --from-bp 1
+  --glm dominant hide-covar firth
+  --out /hpctmp/xgao32/Blood-type-GWAS/Xg/all1kg/plink_results/refined/xg_gwas_chr#CHROM_1_100000_all1kg_refined
+  --pfile /hpctmp/xgao32/1KG/plink_1KG/all_phase3 vzs
+  --pheno all_xg.tsv
+  --pheno-name xg
+  --to-bp 100000
+
+Hostname: atlas8-c01
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/Xg
+Start time: Tue Aug 13 10:37:07 2024
+
+Error: Invalid --chr chromosome code '#CHROM'.
+For more info, try 'plink2 --help [flag name]' or 'plink2 --help | more'.
+
+End time: Tue Aug 13 10:37:07 2024

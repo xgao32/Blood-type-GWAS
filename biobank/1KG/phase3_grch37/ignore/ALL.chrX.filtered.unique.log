@@ -1,0 +1,16 @@
+PLINK v1.90b6.7 64-bit (2 Dec 2018)
+Options in effect:
+  --bfile filtered_vcf/ALL.chrX.filtered
+  --bim filtered_vcf/ALL.chrX.filtered.unique.bim
+  --make-bed
+  --out filtered_vcf/unique/ALL.chrX.filtered.unique
+  --verbose
+
+Hostname: atlas7-c10.hpc.local
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37
+Start time: Thu Sep 12 14:33:13 2024
+
+Error: Unrecognized flag ('--verbose').
+For more information, try 'plink --help [flag name]' or 'plink --help | more'.
+
+End time: Thu Sep 12 14:33:13 2024

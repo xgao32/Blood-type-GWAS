@@ -1,0 +1,23 @@
+PLINK v1.90b6.7 64-bit (2 Dec 2018)
+Options in effect:
+  --bfile ../filtered_vcf/chr23.final
+  --out chr23.tagsnps
+  --show-tags all
+
+Hostname: atlas7-c10.hpc.local
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/LD_result
+Start time: Sun Sep 15 23:33:25 2024
+
+Random number seed: 1726414405
+48126 MB RAM detected; reserving 24063 MB for main workspace.
+19284 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to chr23.tagsnps.nosex .
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+19284 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--show-tags all: Report written to chr23.tagsnps.tags.list .
+
+End time: Sun Sep 15 23:33:37 2024

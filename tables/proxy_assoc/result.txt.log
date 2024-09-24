@@ -1,0 +1,19 @@
+PLINK v1.90b6.7 64-bit (2 Dec 2018)
+Options in effect:
+  --bfile /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/filtered_vcf/ALL.chrX.filtered
+  --ld
+  --ld-snp 23:2666384
+  --ld-window 10
+  --ld-window-kb 100000
+  --ld-xchr
+  --out result.txt
+  --r2
+
+Hostname: atlas7-c10.hpc.local
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/tables/proxy_assoc
+Start time: Thu Sep 12 22:21:51 2024
+
+Error: --ld requires at least 2 parameters.
+For more information, try 'plink --help [flag name]' or 'plink --help | more'.
+
+End time: Thu Sep 12 22:21:51 2024

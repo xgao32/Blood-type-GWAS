@@ -1,0 +1,20 @@
+PLINK v1.90b6.7 64-bit (2 Dec 2018)
+Options in effect:
+  --bfile filtered_vcf/ALL.chr21.filtered
+  --bim filtered_vcf/ALL.chr21.filtered.unique.bim
+  --make-bed
+  --out filtered_vcf/unique/ALL.chr21.filtered.unique
+
+Hostname: atlas7-c10.hpc.local
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37
+Start time: Thu Sep 12 14:18:52 2024
+
+Random number seed: 1726121932
+48126 MB RAM detected; reserving 24063 MB for main workspace.
+148447 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+filtered_vcf/unique/ALL.chr21.filtered.unique.nosex .
+Error: Invalid .bed file size (expected 92927825 bytes).
+
+End time: Thu Sep 12 14:18:52 2024

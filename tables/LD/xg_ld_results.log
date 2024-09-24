@@ -1,0 +1,27 @@
+PLINK v1.90b6.7 64-bit (2 Dec 2018)
+Options in effect:
+  --bfile /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/filtered_vcf/ALL.chrX.filtered
+  --ld-snp-list xg_chrX_positions.txt
+  --ld-window 999999
+  --ld-window-kb 1000000
+  --out xg_ld_results
+  --r2 in-phase with-freqs
+
+Hostname: atlas7-c10.hpc.local
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/tables
+Start time: Wed Sep 11 14:32:22 2024
+
+Random number seed: 1726036342
+48126 MB RAM detected; reserving 24063 MB for main workspace.
+19752 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to xg_ld_results.nosex .
+Using up to 11 threads (change this with --threads).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999926.
+19752 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+Error: Duplicate ID '.'.
+
+End time: Wed Sep 11 14:32:22 2024

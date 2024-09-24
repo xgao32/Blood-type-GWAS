@@ -1,0 +1,33 @@
+PLINK v2.00a1LM 64-bit Intel (11 Feb 2018)
+Options in effect:
+  --chr 3
+  --from-bp 96671415
+  --glm dominant hide-covar firth
+  --keep EAS_individuals.txt
+  --out /hpctmp/xgao32/Blood-type-GWAS/Xg/EAS/plink_results/refined/xg_gwas_chr3_96671415_96871415_EAS_refined
+  --pfile /hpctmp/xgao32/1KG/plink_1KG/all_phase3 vzs
+  --pheno all_xg.tsv
+  --pheno-name xg
+  --to-bp 96871415
+
+Hostname: atlas8-c01
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/Xg
+Start time: Mon Aug 12 23:58:41 2024
+
+Random number seed: 1723478321
+192880 MB RAM detected; reserving 96440 MB for main workspace.
+Using up to 24 threads (change this with --threads).
+2504 samples (1270 females, 1233 males, 1 ambiguous; 2497 founders) loaded from
+/hpctmp/xgao32/1KG/plink_1KG/all_phase3.psam.
+5832276 out of 84805772 variants loaded from
+/hpctmp/xgao32/1KG/plink_1KG/all_phase3.pvar.zst.
+1 binary phenotype loaded (366 cases, 2138 controls).
+--keep: 504 samples remaining.
+504 samples (260 females, 244 males; 504 founders) remaining after main
+filters.
+93 cases and 411 controls remaining after main filters.
+5728 variants remaining after main filters.
+--glm Firth regression on phenotype 'xg': done.
+Results written to /hpctmp/xgao32/Blood-type-GWAS/Xg/EAS/plink_results/refined/xg_gwas_chr3_96671415_96871415_EAS_refined.xg.glm.firth .
+
+End time: Mon Aug 12 23:59:18 2024

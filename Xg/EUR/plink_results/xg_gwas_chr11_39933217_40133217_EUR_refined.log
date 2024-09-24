@@ -1,0 +1,25 @@
+PLINK v2.00a1LM 64-bit Intel (11 Feb 2018)
+Options in effect:
+  --chr 11
+  --from-bp 39933217
+  --glm dominant hide-covar firth
+  --keep EUR_individuals.txt
+  --out /hpctmp/xgao32/Blood-type-GWAS/Xg/EUR/plink_results/xg_gwas_chr11_39933217_40133217_EUR_refined
+  --pfile /hpctmp/xgao32/1KG/plink_1KG/all_phase3
+  --pheno all_xg.tsv
+  --pheno-name xg
+  --to-bp 40133217
+
+Hostname: atlas8-c01
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/Xg
+Start time: Mon Aug 12 23:31:55 2024
+
+Random number seed: 1723476715
+192880 MB RAM detected; reserving 96440 MB for main workspace.
+Using up to 24 threads (change this with --threads).
+2504 samples (1270 females, 1233 males, 1 ambiguous; 2497 founders) loaded from
+/hpctmp/xgao32/1KG/plink_1KG/all_phase3.psam.
+
+Error: Failed to open /hpctmp/xgao32/1KG/plink_1KG/all_phase3.pvar.
+
+End time: Mon Aug 12 23:31:55 2024

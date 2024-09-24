@@ -21,7 +21,7 @@
 *.bim
 *.bed
 *.tped
-*.log
+# *.log # log file shows computing results
 *.fam 
 *.ped
 *.nosex

@@ -1,0 +1,44 @@
+PLINK v1.90b6.7 64-bit (2 Dec 2018)
+Options in effect:
+  --biallelic-only strict
+  --geno 0.01
+  --hwe 1e-6
+  --indep-pairphase 1000 100 0.2
+  --maf 0.01
+  --make-bed
+  --mind 0.01
+  --out filtered_vcf/ALL.chr22.filtered
+  --vcf ALL.chr22.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz
+
+Hostname: atlas7-c10.hpc.local
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37
+Start time: Thu Sep 12 14:22:45 2024
+
+Random number seed: 1726122165
+48126 MB RAM detected; reserving 24063 MB for main workspace.
+--vcf: filtered_vcf/ALL.chr22.filtered-temporary.bed +
+filtered_vcf/ALL.chr22.filtered-temporary.bim +
+filtered_vcf/ALL.chr22.filtered-temporary.fam written.
+(6348 variants skipped.)
+1097199 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to filtered_vcf/ALL.chr22.filtered.nosex .
+0 people removed due to missing genotype data (--mind).
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+0 variants removed due to missing genotype data (--geno).
+--hwe: 47339 variants removed due to Hardy-Weinberg exact test.
+906401 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+143459 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to filtered_vcf/ALL.chr22.filtered.bed +
+filtered_vcf/ALL.chr22.filtered.bim + filtered_vcf/ALL.chr22.filtered.fam ...
+done.
+Pruned 128427 variants from chromosome 22, leaving 15032.
+Pruning complete.  128427 of 143459 variants removed.
+Marker lists written to filtered_vcf/ALL.chr22.filtered.prune.in and
+filtered_vcf/ALL.chr22.filtered.prune.out .
+
+End time: Thu Sep 12 14:24:00 2024

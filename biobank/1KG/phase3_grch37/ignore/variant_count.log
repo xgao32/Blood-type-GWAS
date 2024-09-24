@@ -1,0 +1,14 @@
+PLINK v1.90b6.7 64-bit (2 Dec 2018)
+Options in effect:
+  --bfile ALL.chrX.filtered
+  --count
+  --out variant_count
+
+Hostname: atlas7-c10.hpc.local
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/filtered_vcf
+Start time: Wed Sep 11 00:34:41 2024
+
+Error: Unrecognized flag ('--count').
+For more information, try 'plink --help [flag name]' or 'plink --help | more'.
+
+End time: Wed Sep 11 00:34:41 2024

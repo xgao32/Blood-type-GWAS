@@ -1,0 +1,29 @@
+PLINK v2.00a1LM 64-bit Intel (11 Feb 2018)
+Options in effect:
+  --bfile sample_data.clean
+  --glm dominant hide-covar firth
+  --maf 0.01
+  --out 1kgeas
+  --pheno /hpctmp/xgao32/Blood-type-GWAS/Xg/xg_genotype_info_modified.txt
+  --pheno-name xg
+  --threads 24
+
+Hostname: atlas7-c10.hpc.local
+Working directory: /home/svu/xgao32/GWASTutorial/04_Data_QC
+Start time: Wed Jul 24 20:42:09 2024
+
+Random number seed: 1721824929
+48126 MB RAM detected; reserving 24063 MB for main workspace.
+Using up to 24 threads (change this with --threads).
+500 samples (0 females, 0 males, 500 ambiguous; 500 founders) loaded from
+sample_data.clean.fam.
+1128732 variants loaded from sample_data.clean.bim.
+1 binary phenotype loaded (407 cases, 93 controls).
+Calculating allele frequencies... done.
+0 variants removed due to minor allele threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+1128732 variants remaining after main filters.
+--glm Firth regression on phenotype 'xg': done.
+Results written to 1kgeas.xg.glm.firth .
+
+End time: Wed Jul 24 20:42:37 2024

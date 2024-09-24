@@ -1,0 +1,23 @@
+PLINK v1.90b6.7 64-bit (2 Dec 2018)
+Options in effect:
+  --bfile /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/filtered_vcf/ALL.chrX.filtered
+  --out x_snplist
+  --write-snplist
+
+Hostname: atlas7-c10.hpc.local
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/tables/proxy_assoc
+Start time: Fri Sep 13 00:53:24 2024
+
+Random number seed: 1726160004
+48126 MB RAM detected; reserving 24063 MB for main workspace.
+19316 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to x_snplist.nosex .
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+19316 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+List of variant IDs written to x_snplist.snplist .
+
+End time: Fri Sep 13 00:53:24 2024

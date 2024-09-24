@@ -1,0 +1,12 @@
+PLINK v2.00a1LM 64-bit Intel (11 Feb 2018)
+Options in effect:
+  --glm
+
+Hostname: atlas7-c10.hpc.local
+Working directory: /hpctmp/xgao32/1KG/phase3_grch37/filtered_vcf
+Start time: Fri Aug  2 22:19:49 2024
+
+Error: No input dataset.
+For more info, try 'plink2 --help [flag name]' or 'plink2 --help | more'.
+
+End time: Fri Aug  2 22:19:49 2024
