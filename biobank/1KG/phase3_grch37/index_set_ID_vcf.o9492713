@@ -1,0 +1,21 @@
+/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37
+
+
+Processing chromosome 20
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+      ======================================================================================
+     Resource Usage on 2024-09-17 19:37:10.539259:
+     JobId: 9492713.venus01  				 Project: _pbs_project_default 
+     Submission Host: atlas7-c10 
+     Exit Status: 0
+     NCPUs Requested: 1 				 NCPUs Used: 1
+     Memory Requested: 36gb 				 Memory Used: 302488kb 
+     Vmem Used: 692328kb
+     CPU Time Used: 00:26:35 
+     Walltime requested: 24:00:00 			 Walltime Used: 00:20:21
+     Submit Time:  Tue Sep 17 19:16:45 2024 		 Start Time: Tue Sep 17 19:16:49 2024 
+     End Time: Tue Sep 17 19:37:10 2024 
+     Execution Nodes Used: (tiger2-c57:ncpus=1:mem=37748736kb)
+     ======================================================================================
