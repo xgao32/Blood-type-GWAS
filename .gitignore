@@ -2,6 +2,8 @@
 # files to be ignored
 *.glm.firth
 *glm.firth.id
+*.o* 
+# output of qsub, PLINK gwas results
 
 # sequence data
 *.vcf
@@ -34,7 +36,7 @@
 *.vscode
 
 # folders to ignore
-ignore/
+*/ignore/
 plink_1KG/
 plink_results/*.fam
 biobank/1KG/phase3_grch37/filtered_vcf/

@@ -1,0 +1,107 @@
+/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37
+
+
+Processing chromosome 1
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 2
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 3
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 4
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 5
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 6
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 7
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 8
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+File already exists for chromosome 9. Skipping...
+
+Processing chromosome 10
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 11
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 12
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 13
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 14
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 15
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 16
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 17
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 18
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+
+Processing chromosome 19
+Done adding ID
+Done removing variants with duplicate positions
+Done indexing
+      ======================================================================================
+     Resource Usage on 2024-09-21 08:53:38.481998:
+     JobId: 9495668.venus01  				 Project: _pbs_project_default 
+     Submission Host: atlas7-c10 
+     Exit Status: 0
+     NCPUs Requested: 1 				 NCPUs Used: 1
+     Memory Requested: 4gb 				 Memory Used: 1152904kb 
+     Vmem Used: 1542824kb
+     CPU Time Used: 18:37:02 
+     Walltime requested: 24:00:00 			 Walltime Used: 13:58:20
+     Submit Time:  Fri Sep 20 18:55:14 2024 		 Start Time: Fri Sep 20 18:55:18 2024 
+     End Time: Sat Sep 21 08:53:38 2024 
+     Execution Nodes Used: (tiger2-c57:ncpus=1)
+     ======================================================================================

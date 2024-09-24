@@ -1,7 +1,9 @@
 #!/bin/bash
+## PBS resources will be set to default if none are provided
+
 #PBS -j oe
 #PBS -N index_set_ID_vcf
-#PBS -l select=1:ncpus=1:mem=36gb
+#PBS -l select=1:ncpus=1
 
 cd $PBS_O_WORKDIR; ## This line is needed to output results to directory of script
 source /etc/profile.d/rec_modules.sh # load modules 
@@ -14,7 +16,7 @@ CUR_DIR=$(pwd)
 echo -e "$CUR_DIR\n"
 
 # Loop through chromosomes 20 to 23
-for chr in {20..20}; do
+for chr in {1..19}; do
     # Check if a deduplicated VCF file exists for the current chromosome
     if [[ ! -f "./original_data_with_id/chr${chr}.dedup.vcf.gz" ]]; then
         # Print the current chromosome being processed
@@ -67,4 +69,4 @@ done
 
 # Chr 21
 # 1105538 number of variants before processing
-# 
+# 1105538

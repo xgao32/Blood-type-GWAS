@@ -1,11 +1,15 @@
 #!/bin/bash
-#PBS -l select=1:ncpus=1:mem=36gb
+
+#PBS -j oe
+#PBS -N filter_vcf
+#PBS -l select=1:ncpus=1
 
 # Change to the working directory
 cd "${PBS_O_WORKDIR}"
 
 # Load required modules
-source "/etc/profile.d/rec_modules.sh"
+source /etc/profile.d/rec_modules.sh 
+source /home/svu/xgao32/.bashrc 
 
 # Create output directory if it doesn't exist
 mkdir -p "./filtered_vcf"
@@ -19,47 +23,54 @@ printf "filtering out variants with missing rate > 0.01, not in Hardy-Weinberg e
 
 # Loop through chromosomes
 for chr in {1..21}; do
-    # Print the current chromosome being processed
-    printf "\nProcessing chromosome %s\n" "${chr}"
-    
-    # Set the input file path
-    input_file="./original_data_with_id/chr${chr}.dedup.vcf.gz"
-    
-    # Step 1: Perform QC steps and generate filtered dataset
-    plink \
-            --vcf "${input_file}" \
-            --geno 0.01 \
-            --hwe 1e-6 \
-            --maf 0.01 \
-            --mind 0.01 \
-            --indep-pairphase 1000 100 0.2 \
-            --biallelic-only strict \
-            --make-bed \
-            --out "./filtered_vcf/chr${chr}.dedup.filtered"
 
-    # Print a message about QC completion
-    printf "Performed QC steps for chromosome %s\n" "${chr}"
+    # if statement to check if "./filtered_vcf/chr${chr}.final" already exists and continue in for loop if it does
+    if [ -f "./filtered_vcf/chr${chr}.final.bed" ]; then
+        echo "Merged files for chromosome ${chr}. Skipping..."
+        continue
+    else
+        # Print the current chromosome being processed
+        printf "\nProcessing chromosome %s\n" "${chr}"
+        
+        # Set the input file path
+        input_file="./original_data_with_id/chr${chr}.dedup.vcf.gz"
+        
+        # Step 1: Perform QC steps and generate filtered dataset
+        plink \
+                --vcf "${input_file}" \
+                --geno 0.01 \
+                --hwe 1e-6 \
+                --maf 0.01 \
+                --mind 0.01 \
+                --indep-pairphase 1000 100 0.2 \
+                --biallelic-only strict \
+                --make-bed \
+                --out "./filtered_vcf/chr${chr}.dedup.filtered"
 
-    # Step 2: Extract specific variants to include and merge with the filtered dataset
-    plink \
-            --vcf "${input_file}" \
-            --extract "${grch37_variants_to_keep}" \
-            --biallelic-only strict \
-            --make-bed \
-            --out "./filtered_vcf/chr${chr}.dedup.variants_to_keep"
+        # Print a message about QC completion
+        printf "Performed QC steps for chromosome %s\n" "${chr}"
 
-    # Print a message about variant extraction
-    printf "Extracted variants to keep for chromosome %s\n" "${chr}"
-    
-    # Step 3: Merge BED files
-    plink \
-            --bfile "./filtered_vcf/chr${chr}.dedup.filtered" \
-            --bmerge "./filtered_vcf/chr${chr}.dedup.variants_to_keep" \
-            --make-bed \
-            --out "./filtered_vcf/chr${chr}.final"
+        # Step 2: Extract specific variants to include and merge with the filtered dataset
+        plink \
+                --vcf "${input_file}" \
+                --extract "${grch37_variants_to_keep}" \
+                --biallelic-only strict \
+                --make-bed \
+                --out "./filtered_vcf/chr${chr}.dedup.variants_to_keep"
 
-    # Print a message about BED file merging
-    printf "Merged BED files for chromosome %s\n" "${chr}"
+        # Print a message about variant extraction
+        printf "Extracted variants to keep for chromosome %s\n" "${chr}"
+        
+        # Step 3: Merge BED files
+        plink \
+                --bfile "./filtered_vcf/chr${chr}.dedup.filtered" \
+                --bmerge "./filtered_vcf/chr${chr}.dedup.variants_to_keep" \
+                --make-bed \
+                --out "./filtered_vcf/chr${chr}.final"
+
+        # Print a message about BED file merging
+        printf "Merged BED files for chromosome %s\n" "${chr}"
+    fi
 done
 
 # ignore 
