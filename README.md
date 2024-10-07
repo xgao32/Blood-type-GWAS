@@ -12,13 +12,19 @@
   1. alternate methods : multiplex Taqman PCR, sequencing
   2. potential challenges with homologous genes that are almost identical like RHD and RHCE, require long read sequencing to distinguish reads between the two genes
 
-### 3. use `renv` to manage R packages for this repository
-Activate specific version of R on NUS HPC.
+### 3. use `renv` to manage R packages and `poetry` to manage python packages for this repository
+Activate specific versions of Python and R on NUS HPC.
 
 ```sh
+# activate easy build environment manager
 source /app1/ebenv
-# do not use R-bundle-Bioconductor which is R 4.3.2 and cannot install MASS package 
+
+# do not use default R-bundle-Bioconductor on NUS HPC which is R 4.3.2 and cannot install MASS package 
 module load R/4.2.2-foss-2022b
+
+# must load this specific version of python 3.10 to avoid GCCcore conflict with R 4.2.2 on NUS HPC
+module load Python/3.10.8-GCCcore-12.2.0
+
 ```
 
 Make sure the current directory is `Blood-type-GWAS`. If inside `Xg` or other directories, `renv` will fail to work. 
