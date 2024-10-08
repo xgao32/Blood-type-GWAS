@@ -12,13 +12,11 @@ library(ggplot2)
 setwd("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/LD_result")
 
 # Set the input file path
-INPUT_FILE <- "all_variant_chr23_200kb.ld.ld"
-
 # manually edited tsv file
-#"rs311103_LD_result.tsv"
+INPUT_FILE <- "rs311103_LD_result.tsv" #"all_variant_chr23_200kb.ld.ld"
 
 # Load the TSV file into a data frame
-ld_res <- read.table(INPUT_FILE, header = TRUE, sep = "\t", strip.white = TRUE, nrows=2)
+ld_res <- read.table(INPUT_FILE, header = TRUE, sep = "\t", strip.white = TRUE)
 
 # View the first few rows of the data
 head(ld_res)

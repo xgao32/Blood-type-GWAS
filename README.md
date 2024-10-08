@@ -37,8 +37,8 @@ Once specific R version for NUS HPC is activated, open R and use `renv::restore(
 
 For new projects
 ```R
-library(renv) 
-renv::init() # initialize new renv project in directoy, only do once for new directory
+library(renv) # activate Renv package
+# renv::init() # initialize new renv project in directoy, only do once for new directory
 
 # example of packages to be installed
 packages <- c("dplyr", "ggplot2", "tidyr", "manhattanly",  
