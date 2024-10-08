@@ -25,13 +25,15 @@ module load R/4.2.2-foss-2022b
 # must load this specific version of python 3.10 to avoid GCCcore conflict with R 4.2.2 on NUS HPC
 module load Python/3.10.8-GCCcore-12.2.0
 
+# if something goes wrong and which python or which R is not loading the correct versions
+# module purge 
+# module load ... 
+
 ```
 
-Make sure the current directory is `Blood-type-GWAS`. If inside `Xg` or other directories, `renv` will fail to work. 
+Make sure the current directory is `Blood-type-GWAS`. If inside other directories, `renv` will fail to work. 
 
 Once specific R version for NUS HPC is activated, open R and use `renv::restore()` to install all packages present in the `renv.lock`.
-
-
 
 For new projects
 ```R
@@ -45,6 +47,49 @@ packages <- c("dplyr", "ggplot2", "tidyr", "manhattanly",
 renv::install(packages)
 renv::snapshot() # creat renv.lock file to save package versions
 renv::restore() # install all packages in renv.lock file 
+```
+
+Using poetry to manage python packages. Make sure to cd into `Blood-type-GWAS` directory first.
+
+```python
+poetry init # do once only to initialize poetry in directory
+
+# to use specific version of python loaded by ebenv
+poetry env use /app1/ebapps/arches/flat/software/Python/3.10.8-GCCcore-12.2.0/bin/python
+
+# Add dependencies as needed
+poetry add numpy pandas matplotlib
+
+# Install all dependencies from pyproject.toml
+poetry install
+
+# Enter the virtual environment for development work, this will activate specific environment with custom defined packages, this environment will only have packages defined from setting up poetry
+poetry shell
+
+# Check installed packages within the environment
+poetry show
+
+# to run script in this environment
+poetry run python your_script.py
+
+```
+
+If everything is working correctly, this should appear
+```
+[xgao32@atlas8-c01 Blood-type-GWAS]$ poetry env info
+
+Virtualenv
+Python:         3.10.8
+Implementation: CPython
+Path:           NA
+Executable:     NA
+
+System
+Platform:   linux
+OS:         posix
+Python:     3.10.8
+Path:       /app1/ebapps/arches/flat/software/Python/3.10.8-GCCcore-12.2.0
+Executable: /app1/ebapps/arches/flat/software/Python/3.10.8-GCCcore-12.2.0/bin/python3.10
 ```
 
 ### 4. Organization 

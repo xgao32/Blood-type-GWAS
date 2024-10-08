@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 #PBS -j oe
 #PBS -N compute_LD_all_variants
 #PBS -l select=1:ncpus=32
@@ -24,24 +23,25 @@ VARIANTS_FILE="/hpctmp/xgao32/Blood-type-GWAS/tables/process_tables_scripts/grch
 for chr in {1..23}; do
 
     input_file=../filtered_vcf/chr$chr.final
+    echo -e "\n input $input_file \n"
 
     # check if current chr is 5 8 10 13 14 16 20 21, if true then continue else process the chromosome
     if [[ "$chr" == "5" || "$chr" == "8" || "$chr" == "10" || "$chr" == "13" || "$chr" == "14" || "$chr" == "16" || "$chr" == "20" || "$chr" == "21" ]]; then
-        echo "\n skipping chromosome $chr\n"
+        echo -e "\n skipping chromosome $chr\n"
         continue
     else
     
 
-        echo "\nProcessing chromosome $chr\n"
+        echo -e "\nProcessing chromosome $chr\n"
 
         plink \
-            --bfile $input_file \
-            --ld-snp-list $VARIANTS_FILE \
+            --bfile ${input_file} \
+            --ld-snp-list ${VARIANTS_FILE} \
             --r2 dprime 'in-phase' 'with-freqs' 'yes-really' \
             --ld-window 1000000000 \
-            --ld-window-kb 1000000000 \
+            --ld-window-kb 200 \
             --ld-window-r2 0.0 \
-            --out all_variant_chr$chr.ld
+            --out all_variant_chr${chr}_200kb.ld
     fi 
     # echo "23:2666384" > chr23_2666384_variant.txt
     #plink \

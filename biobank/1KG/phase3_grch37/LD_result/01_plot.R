@@ -11,17 +11,21 @@ library(ggplot2)
 # set working directory
 setwd("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/LD_result")
 
-INPUT_FILE <- "rs311103_LD_result.tsv"
+# Set the input file path
+INPUT_FILE <- "all_variant_chr23_200kb.ld.ld"
+
+# manually edited tsv file
+#"rs311103_LD_result.tsv"
 
 # Load the TSV file into a data frame
-ld_res <- read.table(INPUT_FILE, header = TRUE, sep = "\t")
+ld_res <- read.table(INPUT_FILE, header = TRUE, sep = "\t", strip.white = TRUE, nrows=2)
 
 # View the first few rows of the data
 head(ld_res)
 
-# Add 1e-6 to the R2 and DP columns to avoid log(0)
-ld_res$R2 <- ld_res$R2 + 1e-6
-ld_res$DP <- ld_res$DP + 1e-6
+# Add 1e-16 to the R2 and DP columns to avoid log(0)
+ld_res$R2 <- ld_res$R2 + 1e-16
+ld_res$DP <- ld_res$DP + 1e-16
 
 # Create the scatter plot
 # Create the scatter plot
@@ -30,7 +34,7 @@ ld_plot <- ggplot(ld_res, aes(x = BP_B, y = R2, color = MAF_B)) +
     scale_color_gradient(low = "cyan", high = "orange") +
     # scale_y_log10() +  # Use scale_y_log10() for log10 transformation
     labs(
-        title = expression(R^2 ~ " LD Plot for Chr23:2666384"),
+        title = expression(R^2 ~ " LD Plot for Chr23"),
         x = "POS",
         y = expression(R^2),  # Use expression to format R^2 correctly
         color = "Minor Allele Freq."
@@ -43,7 +47,7 @@ ld_plot <- ggplot(ld_res, aes(x = BP_B, y = R2, color = MAF_B)) +
     # theme_minimal()  # Use a minimal theme for better aesthetics
 
 # Save the plot as a PNG file
-ggsave("LD_Plot_Chr23_2666384_R2_co.png", plot = ld_plot, width = 8, height = 6, dpi = 300)
+ggsave("LD_Plot_Chr23_all_variants_R2_co.png", plot = ld_plot, width = 8, height = 6, dpi = 300)
 
 
 # Create the scatter plot
@@ -52,7 +56,7 @@ ld_plot_DP <- ggplot(ld_res, aes(x = BP_B, y = DP, color = MAF_B)) +
     scale_color_gradient(low = "cyan", high = "orange") +
     # scale_y_log10() +  # Use scale_y_log10() for log10 transformation
     labs(
-        title = "DPrime LD Plot for Chr23:2666384",
+        title = "DPrime LD Plot for Chr23",
         x = "POS",
         y = expression(DP),  # Use expression to format R^2 correctly
         color = "Minor Allele Freq."
@@ -63,7 +67,7 @@ ld_plot_DP <- ggplot(ld_res, aes(x = BP_B, y = DP, color = MAF_B)) +
         legend.title = element_text(size = 10)
     )
 
-ggsave("LD_Plot_Chr23_2666384_DP_co.png", plot = ld_plot_DP, width = 8, height = 6, dpi = 300)
+# ggsave("LD_Plot_Chr23_all_variants_DP_co.png", plot = ld_plot_DP, width = 8, height = 6, dpi = 300)
 
 
 #### subset of data ####
