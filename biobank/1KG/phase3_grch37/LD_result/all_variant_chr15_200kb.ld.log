@@ -1,0 +1,28 @@
+PLINK v1.90b6.7 64-bit (2 Dec 2018)
+Options in effect:
+  --bfile ../filtered_vcf/chr15.final
+  --ld-snp-list /hpctmp/xgao32/Blood-type-GWAS/tables/process_tables_scripts/grch37_variants_to_keep.txt
+  --ld-window 1000000000
+  --ld-window-kb 200
+  --ld-window-r2 0.0
+  --out all_variant_chr15_200kb.ld
+  --r2 dprime in-phase with-freqs yes-really
+
+Hostname: atlas9-c01
+Working directory: /hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/LD_result
+Start time: Tue Sep 24 23:53:01 2024
+
+Random number seed: 1727193181
+191835 MB RAM detected; reserving 95917 MB for main workspace.
+300219 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to all_variant_chr15_200kb.ld.nosex .
+Using up to 39 threads (change this with --threads).
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+300219 variants and 2504 people pass filters and QC.
+Note: No phenotypes present.
+--r2 in-phase dprime with-freqs... done.
+Results written to all_variant_chr15_200kb.ld.ld .
+
+End time: Tue Sep 24 23:53:02 2024

@@ -31,13 +31,19 @@
 *.pdf
 *.in
 *.out
+*ld
 
 # vs code configuration
 *.vscode
 
 # folders to ignore
-*/ignore/
+*ignore/
 plink_1KG/
 plink_results/*.fam
-biobank/1KG/phase3_grch37/filtered_vcf/
-*.fam
+biobank/1KG/phase3_grch37/filtered_vcf/*
+biobank/1KG/phase3_grch37/original_data_with_id/*
+
+# exceptions to be commit
+!*biobank/1KG/phase3_grch37/filtered_vcf/chr23.dedup.variants_to_keep.bim
+!*biobank/1KG/phase3_grch37/filtered_vcf/chr9.dedup.variants_to_keep.bim
+!*biobank/1KG/phase3_grch37/LD_result/all_variant_chr23_200kb.ld.ld
