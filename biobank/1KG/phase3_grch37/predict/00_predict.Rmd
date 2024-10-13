@@ -1,0 +1,20 @@
+# Predict status of causal variant 
+
+```{R}
+# clear all variables
+rm(list = ls())
+
+# Load necessary libraries
+library(ggplot2)
+library(vcfR)
+
+# set directory
+if (dir.exists("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/predict")) {
+    # Set the working directory
+    setwd("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/predict")
+    } else {
+    setwd("/workspaces/Blood-type-GWAS/biobank/1KG/phase3_grch37/predict")
+    }
+```
+
+
