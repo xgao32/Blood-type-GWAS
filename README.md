@@ -33,16 +33,17 @@ module load Python/3.10.8-GCCcore-12.2.0
 
 Make sure the current directory is `Blood-type-GWAS`. If inside other directories, `renv` will fail to work. 
 
-Once specific R version for NUS HPC is activated, open R and use `renv::restore()` to install all packages present in the `renv.lock`.
+Once specific R version for NUS HPC is module loaded, open R and use `renv::restore()` to install all packages present in the `renv.lock`. NUS HPC module loaded R already has `renv` and other libraries installed.
 
 For new projects
 ```R
-library(renv) # activate Renv package
-# renv::init() # initialize new renv project in directoy, only do once for new directory
+#library(renv) # activate Renv package
+renv::init() # initialize new renv project in directoy, only do once for new directories, this will create renv.lock file and link libraries present in current R with renv
 
-# example of packages to be installed
-packages <- c("dplyr", "ggplot2", "tidyr", "manhattanly",  
-		"qqman", "plotly") 
+
+# specific packages to be installed in order to use R in vs code properly
+# languageserver, httpgd
+packages <- c("languageserver", "httpgd", "vcfR", "dplyr","ggplot", "tidyr", "manhattanly", "qqman") 
 
 renv::install(packages)
 renv::snapshot() # creat renv.lock file to save package versions

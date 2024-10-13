@@ -1,10 +1,7 @@
 install.packages("data.table")
-install.packages("vcfR")
-BiocManager::install("Rsamtools")
+# BiocManager::install("Rsamtools")
 
 library(data.table)
-library(vcfR)
-library(Rsamtools)
 
 # VCF
 vcf_files <- readlines("gwas\vcf_files.txt")
