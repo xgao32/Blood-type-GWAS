@@ -1,20 +1,159 @@
 # Predict status of causal variant 
 
-```{R}
-# clear all variables
-rm(list = ls())
-
-# Load necessary libraries
-library(ggplot2)
-library(vcfR)
-
+```{R,message=False}
 # set directory
-if (dir.exists("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/predict")) {
+if (dir.exists("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/")) {
     # Set the working directory
-    setwd("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/predict")
+    setwd("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/")
     } else {
-    setwd("/workspaces/Blood-type-GWAS/biobank/1KG/phase3_grch37/predict")
+    setwd("/workspaces/Blood-type-GWAS/biobank/1KG/phase3_grch37/")
     }
 ```
 
+```{R, message=FALSE}
+# clear all variables
+rm(list = ls())
 
+set.seed(0)
+
+# Load necessary libraries
+library(ggplot2)
+# library(vcfR)
+library(genio)
+library(dplyr)
+library(VariantAnnotation)
+library(GenomicRanges)
+library(caret)
+library(naivebayes)
+```
+
+
+
+# Load VCF
+vcfR requires reading the entire VCF file into memory before doing any operation. VariantAnnotation supports position specific reading of VCF files
+```{R}
+# list of variant positions based on LD results to extract from VCF 
+file_path <- "./LD_result/all_variant_chr23_200kb.ld.ld"
+data <- read.table(file_path, header = TRUE)
+
+# Extract chromosome number from file name
+chr_num <- gsub(".*chr(.*)_200kb.ld.ld", "\\1", file_path)
+
+# Create the DIST column
+data <- data %>% mutate(DIST = BP_A - BP_B)
+
+# Filter the data (adjust filter conditions if needed), not explicitly filtering for R2 with any causal variants
+filtered_data <- data %>% filter(MAF_A >= 0.01, MAF_B >= 0.01, SNP_A != SNP_B, R2 >= 0.3)
+```
+Convert VCF object into data frame
+```{R}
+SNP_B_positions <-unique(filtered_data$BP_B)
+SNP_A_positions <-unique(filtered_data$BP_A)
+positions <-c(SNP_A_positions,SNP_B_positions)
+
+gr <- GRanges("X", IRanges(start = positions, width = 1), )
+chr23_vcf <- readVcf("./original_data_with_id/chr23.dedup.vcf.gz", param = ScanVcfParam(which = gr))
+# chr23_vcf_data <- read.vcfR("../original_data_with_id/chr23.dedup.vcf.gz")
+
+genotype_data <- geno(chr23_vcf)$GT
+genotype_phased_df <- as.data.frame(genotype_data) # convert to data frame
+```
+
+Create matrix of genotype separated by phase of dimension # variants by # chromosomes
+```{R}
+# Function to split phased genotypes into two columns
+split_phased_genotypes <- function(geno_col) {
+    # Split the genotypes on "|" and return a matrix with two columns per sample
+    do.call(rbind, strsplit(geno_col, split = "\\|"))
+}
+
+# Apply the function to each sample (each column) and combine the results
+genotype_split_list <- lapply(genotype_phased_df, split_phased_genotypes)
+
+# Combine the result into a single matrix
+genotype_split_matrix <- do.call(cbind, genotype_split_list)
+
+# Convert the split genotype matrix to a data frame
+genotype_split_df <- as.data.frame(genotype_split_matrix)
+
+# add row name
+variant_positions <- start(rowRanges(chr23_vcf))
+rownames(genotype_split_df) <- variant_positions
+
+# transpose dataframe 
+df_genotype <- as.data.frame(t(genotype_split_df))
+
+# change all entries from character to factor type 
+df_genotype[] <- lapply(df_genotype, as.factor)
+```
+
+Naive bayes
+```{R}
+# summary statistics to see frequency of alleles
+summary(df_genotype)
+
+# check for class with 0 counts to decide if laplace smoothing is needed
+aggregate(df_genotype,by = list(df_genotype$`2666384`),FUN = table)
+
+# partition data
+sub <- createDataPartition(y = df_genotype$`2666384`, p = 0.80, list = FALSE)
+df_train <- df_genotype[sub,]
+df_test <- df_genotype[-sub,]
+
+# train model on all other
+nb_mod <- naive_bayes(`2666384` ~ ., df_train, laplace=0)
+summary(nb_mod)
+
+# performance on training set
+nb_train_perf <- predict(object = nb_mod, # NB model
+                    newdata =  subset(df_train, select = -`2666384`), # predictors
+                    type = "class")
+
+# 90% accuracy on training set
+train_conf <- confusionMatrix(data = nb_train_perf, # predictions
+                                reference = df_train$`2666384`, # mask target variable in training set
+                                positive = "0",
+                                mode = "everything")
+
+# test set
+# performance on training set
+nb_test_perf <- predict(object = nb_mod, # NB model
+                    newdata =  subset(df_test, select = -`2666384`), # predictors
+                    type = "class")
+
+test_conf <- confusionMatrix(data = nb_test_perf, # predictions
+                                reference = df_test$`2666384`, # mask target variable in training set
+                                positive = "0",
+                                mode = "everything")
+
+
+```
+
+checking for additional positions in VCF object
+```{R}
+# why more positions loaded from VCF file than number of positions?
+# Get the positions of the variants in the VCF object
+vcf_positions <- start(rowRanges(chr23_vcf))
+
+# Compare the number of positions
+length(positions)  # The number of positions you queried
+length(vcf_positions)  # The number of positions in the VCF object
+
+# Check for overlapping positions
+overlapping_positions <- intersect(positions, vcf_positions)
+length(overlapping_positions)  # Number of positions that overlap with your query
+
+
+```
+
+# genio
+
+Load PLINK bed/fam/bim file. PLINK bed files do not store phasing information of genotypes.
+```{R}
+chr23_filtered_vcf_plink <- "./filtered_vcf/chr23.final"
+chr23_geno_data <- read_plink(chr23_filtered_vcf_plink)  # object with X, bim, fam 
+
+# matrix of genotypes
+chr23_mat = chr23_geno_data$X
+chr23_phased_df <- as.data.frame(chr23_mat) # number of variants by 2504, df contains 0/1/2 to represent state of alleles
+```

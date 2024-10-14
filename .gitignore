@@ -1,9 +1,14 @@
 
-# files to be ignored
+# R
+*.RData
+
+#PLINK gwas results files to be ignored
 *.glm.firth
 *glm.firth.id
+
+# output of qsub
 *.o* 
-# output of qsub, PLINK gwas results
+
 
 # sequence data
 *.vcf

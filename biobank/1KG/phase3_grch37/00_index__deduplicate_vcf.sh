@@ -16,7 +16,7 @@ CUR_DIR=$(pwd)
 echo -e "$CUR_DIR\n"
 
 # Loop through chromosomes 20 to 23
-for chr in {1..19}; do
+for chr in {1..23}; do
     # Check if a deduplicated VCF file exists for the current chromosome
     if [[ ! -f "./original_data_with_id/chr${chr}.dedup.vcf.gz" ]]; then
         # Print the current chromosome being processed

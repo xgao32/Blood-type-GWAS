@@ -19,11 +19,9 @@ Activate specific versions of Python and R on NUS HPC.
 # activate easy build environment manager
 source /app1/ebenv
 
-# do not use default R-bundle-Bioconductor on NUS HPC which is R 4.3.2 and cannot install MASS package 
-module load R/4.2.2-foss-2022b
-
-# must load this specific version of python 3.10 to avoid GCCcore conflict with R 4.2.2 on NUS HPC
-module load Python/3.10.8-GCCcore-12.2.0
+# R 4.4.1
+module load R-bundle-CRAN/2024.06-foss-2023b
+# no need to load python, compatible version of python with GCC required for R will be loaded automatically. Do not preload modules in .bashrc as it will not work correctly
 
 # if something goes wrong and which python or which R is not loading the correct versions
 # module purge 
@@ -42,12 +40,14 @@ renv::init() # initialize new renv project in directoy, only do once for new dir
 
 
 # specific packages to be installed in order to use R in vs code properly
-# languageserver, httpgd
+# languageserver, httpgd, jsonlite, rlang
 packages <- c("languageserver", "httpgd", "vcfR", "dplyr","ggplot", "tidyr", "manhattanly", "qqman") 
 
 renv::install(packages)
+renv::install("bioc::{name of package from bioconductor}") # to install specific bioconductor packages not on CRAN
 renv::snapshot() # creat renv.lock file to save package versions
 renv::restore() # install all packages in renv.lock file 
+
 ```
 
 Using poetry to manage python packages. Make sure to cd into `Blood-type-GWAS` directory first.
@@ -77,20 +77,6 @@ poetry run python your_script.py
 
 If everything is working correctly, this should appear
 ```
-[xgao32@atlas8-c01 Blood-type-GWAS]$ poetry env info
-
-Virtualenv
-Python:         3.10.8
-Implementation: CPython
-Path:           NA
-Executable:     NA
-
-System
-Platform:   linux
-OS:         posix
-Python:     3.10.8
-Path:       /app1/ebapps/arches/flat/software/Python/3.10.8-GCCcore-12.2.0
-Executable: /app1/ebapps/arches/flat/software/Python/3.10.8-GCCcore-12.2.0/bin/python3.10
 ```
 
 ### 4. Organization 
@@ -145,5 +131,28 @@ Bare minimum script to use `qsub`
 ## comment with 2 # 
 
 cd ${PBS_O_WORKDIR};   ## this line is needed, do not delete. Change current working directory to directory where job is submitted
+
+#### minimum required for job scripts for NUS HPC ####
+
+source /etc/profile.d/rec_modules.sh # load modules 
+source /app1/ebenv
+module load <name of module>
+
+#### BEGINNING OF ACTUAL SCRIPT ####
+
+
+# commands for submitting jobs 
+hpc summary # list of commands to use on NUS HPC
+qstat -f jobid # list job with full info
+qsub  myjob1.txt 
+
+# check status of job by command:
+qstat -fx {JOBID} 
+
+# Check the standard output message or progress of job
+qcat -j {JOBID} -t OU -n 5000 
+
+# end job
+qdel {JOBID}
 
 ```
