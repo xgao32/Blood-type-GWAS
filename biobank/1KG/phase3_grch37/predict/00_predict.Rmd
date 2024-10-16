@@ -14,17 +14,19 @@ if (dir.exists("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/")) {
 # clear all variables
 rm(list = ls())
 
-set.seed(0)
-
+set.seed(0) # set random seed
+load(".RData")
 # Load necessary libraries
 library(ggplot2)
 # library(vcfR)
-library(genio)
+#library(genio)
 library(dplyr)
 library(VariantAnnotation)
 library(GenomicRanges)
 library(caret)
 library(naivebayes)
+library(pROC)
+library(e1071)
 ```
 
 
@@ -43,7 +45,7 @@ chr_num <- gsub(".*chr(.*)_200kb.ld.ld", "\\1", file_path)
 data <- data %>% mutate(DIST = BP_A - BP_B)
 
 # Filter the data (adjust filter conditions if needed), not explicitly filtering for R2 with any causal variants
-filtered_data <- data %>% filter(MAF_A >= 0.01, MAF_B >= 0.01, SNP_A != SNP_B, R2 >= 0.3)
+filtered_data <- data %>% filter(MAF_A >= 0.01, MAF_B >= 0.01, SNP_A != SNP_B, R2 >= 0.0)
 ```
 Convert VCF object into data frame
 ```{R}
@@ -126,10 +128,96 @@ test_conf <- confusionMatrix(data = nb_test_perf, # predictions
                                 positive = "0",
                                 mode = "everything")
 
+# predict probabilities to make ROC AUC
+nb_test_probs <- predict(object = nb_mod, 
+                        newdata = subset(df_test, select = -`2666384`), 
+                        type = "prob")
+
+# Create ROC curve
+roc_test <- roc(response = df_test$`2666384`, 
+                predictor = nb_test_probs[, 1], 
+                levels = c(0, 1))
+
+
+# Plot ROC curve
+# Extract specificity and sensitivity values
+roc_data <- data.frame(
+    specificity = roc_test$specificities,
+    sensitivity = roc_test$sensitivities
+    )
+
+
+# Plot ROC curve
+ggplot(roc_data, aes(x = 1 - specificity, y = sensitivity)) +
+    geom_line() +
+    geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+    labs(title = paste(" Xg classification ROC Curve (AUC = ", round(roc_test$auc, 3), ")"), 
+        x = "1 - Specificity (False Positive Rate)", 
+        y = "Sensitivity (True Positive Rate)") +
+    theme_classic()
+
+
 
 ```
 
-checking for additional positions in VCF object
+```{R}
+
+```
+
+
+
+DOES NOT WORK 
+```{R}
+# Split data into training and testing sets
+# target <- as.character(2666384) # avoid coding column names
+trainIndex <- createDataPartition(df_genotype$`2666384`, p = 0.8, list = FALSE)
+trainData <- df_genotype[trainIndex,]
+testData <- df_genotype[-trainIndex,]
+
+
+# Define train control with K-fold cross-validation
+train_control <- trainControl(
+    method = "cv",
+    number = 5,  # Number of folds
+    savePredictions = "final",
+    classProbs = TRUE
+    )
+    
+# Assuming df_train is your training data frame
+# Check and rename factor levels if necessary
+#trainData$`2666384` <- factor(trainData$`2666384, labels = make.names(levels(as.factor(trainData$`2666384`))))
+
+# Define the tuning grid for Naive Bayes
+tune_grid <- expand.grid(
+    laplace = c(1),            # Laplace smoothing parameter
+    usekernel = c(FALSE), # Whether to use a kernel density estimate
+    adjust = c(1)        # Adjustment parameter for kernel density estimation
+)
+
+# Train Naive Bayes model with caret, 
+nb_model <- train(
+    `2666384` ~ .,  # Formula
+    data = trainData,
+    method = "naive_bayes",
+    trControl = train_control,
+    tuneGrid = tune_grid
+    )
+
+# Error: At least one of the class levels is not a valid R variable name; This will cause errors when class probabilities are generated because the variables names will be converted to  X0, X1 . Please use factor levels that can be used as valid R variable names  (see ?make.names for help).
+
+
+# Make predictions on test data
+predictions <- predict(nb_model, newdata = testData, type = "prob")
+
+
+# Calculate ROC curve and AUC
+roc(testData$target, predictions[, 1])  # Assuming class labels are 0 and 1
+
+```
+
+
+
+# checking for additional rows in VCF object more than actual number of variants
 ```{R}
 # why more positions loaded from VCF file than number of positions?
 # Get the positions of the variants in the VCF object
