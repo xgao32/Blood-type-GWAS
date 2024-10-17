@@ -1,6 +1,6 @@
 
 # R
-*.RData
+# *.RData
 
 #PLINK gwas results files to be ignored
 *.glm.firth

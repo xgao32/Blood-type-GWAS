@@ -1,4 +1,5 @@
 # Predict status of causal variant 
+This R markdown file is a prototype to test code. Actual script for doing prediction of causal variant from associated variants is `00_predict.R`.
 
 ```{R,message=False}
 # set directory
