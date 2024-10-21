@@ -1,4 +1,4 @@
-# R script to make plots of classification tasks
+# R script to predict causal variant from associated variants in VCF files and make plots of classification task results
 
 # Set random seed
 set.seed(0)
@@ -13,14 +13,6 @@ library(naivebayes)
 library(pROC)
 library(e1071)
 
-# set working directory on HPC or codespace
-if (dir.exists("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/")) {
-    # Set the working directory
-    setwd("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/")
-    } else {
-    setwd("/workspaces/Blood-type-GWAS/biobank/1KG/phase3_grch37/")
-    }
-
 # --- Function to load and preprocess LD data ---
 # This function loads the LD results file from the directory /Blood-type-GWAS/biobank/1KG/phase3_grch37/LD_result/, filters variants and creates a new column for the distance between variants
 #
@@ -31,11 +23,10 @@ if (dir.exists("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/")) {
 #
 # @return (data.frame) A data frame containing the filtered and preprocessed LD data. 
 #
-load_and_preprocess_ld <- function(ld_file_path, MAF_A_threshold = 0.01, MAF_B_threshold = 0.01,R2_threshold = 0.3) {
+load_and_preprocess_ld <- function(ld_file_path, MAF_A_threshold = 0.01, MAF_B_threshold = 0.01, R2_threshold = 0.3) {
     data <- read.table(ld_file_path, header = TRUE) %>% 
         mutate(DIST = BP_A - BP_B) %>%
-        filter(MAF_A >= MAF_A_threshold, MAF_B >= MAF_B_threshold, SNP_A != SNP_B, R2 >= R2_threshold)
-        )    
+        filter(MAF_A >= MAF_A_threshold, MAF_B >= MAF_B_threshold, SNP_A != SNP_B, R2 >= R2_threshold)    
     return(data)
 }
 
@@ -65,11 +56,16 @@ load_and_preprocess_vcf <- function(vcf_file_path, chr_num, positions) {
         }))
     )
     
-    # Set row names 
+    # use position of variant as row names 
     variant_positions <- start(rowRanges(chr_vcf))
+
+    # avoid problem with multiple variants at same position
     unique_variant_positions <- make.unique(as.character(variant_positions))
+    
+    # assign row names
     rownames(genotype_split_df) <- unique_variant_positions
     
+    # cast as data frame and make all entries factor type (cannot use integer or binary type for ML in R)
     df_genotype <- as.data.frame(t(genotype_split_df))
     df_genotype[] <- lapply(df_genotype, as.factor)
     
@@ -86,7 +82,7 @@ train_and_evaluate_model <- function(df_genotype, target_column) {
   
   # --- Function to calculate and plot ROC curve ---
   calculate_and_plot_roc <- function(model, test_data, target_col) { 
-    nb_test_probs <- predict(model, newdata = subset(test_data, select = -target_col), type = "prob")
+    nb_test_probs <- predict( , newdata = subset(test_data, select = -target_col), type = "prob")
     roc_test <- roc(response = test_data[[target_col]], predictor = nb_test_probs[, 1], levels = c(0, 1))
     
     roc_data <- data.frame(specificity = roc_test$specificities, sensitivity = roc_test$sensitivities)
@@ -95,8 +91,8 @@ train_and_evaluate_model <- function(df_genotype, target_column) {
       geom_line() +
       geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
       labs(title = paste("Classification ROC Curve (AUC =", round(roc_test$auc, 3), ")"),
-           x = "1 - Specificity (False Positive Rate)", 
-           y = "Sensitivity (True Positive Rate)") +
+            x = "1 - Specificity (False Positive Rate)", 
+            y = "Sensitivity (True Positive Rate)") +
       theme_classic())
     
     return(roc_test$auc)
@@ -118,14 +114,25 @@ train_and_evaluate_model <- function(df_genotype, target_column) {
 }
 
 # --- Main script execution ---
-set_working_directory()
+# set working directory on HPC or codespace
+if (dir.exists("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/")) {
+    # Set the working directory
+    setwd("/hpctmp/xgao32/Blood-type-GWAS/biobank/1KG/phase3_grch37/")
+    } else {
+    setwd("/workspaces/Blood-type-GWAS/biobank/1KG/phase3_grch37/")
+  }
 
-ld_data <- load_and_preprocess_ld("./LD_result/all_variant_chr18_200kb.ld.ld")
+chr_num <- 9
+ld_data <- load_and_preprocess_ld(paste0("./LD_result/all_variant_chr", chr_num, "_200kb.ld.ld"))
+
+#ld_data <- load_and_preprocess_ld("./LD_result/all_variant_chr${chr}_200kb.ld.ld")
 # chr_num <- gsub(".*chr(.*)_200kb.ld.ld", "\\1", "./LD_result/all_variant_chr18_200kb.ld.ld") 
-chr_num <- gsub(".*chr(\\d+).*\\.ld", "\\1", "./LD_result/all_variant_chr18_200kb.ld")
-positions <- extract_variant_positions(ld_data)
 
-genotype_df <- load_and_preprocess_vcf("./original_data_with_id/chr18.dedup.vcf.gz", chr_num, positions)
+# positions to load based on LD data
+positions <-   unique(c(ld_data$BP_A, ld_data$BP_B))
+
+#genotype_df <- load_and_preprocess_vcf("./original_data_with_id/chr${chr}.dedup.vcf.gz", chr_num, positions)
+genotype_df <- load_and_preprocess_vcf(paste0("./original_data_with_id/chr", chr_num, ".dedup.vcf.gz"), chr_num, positions)
 
 results <- train_and_evaluate_model(genotype_df, "43319519")
 
