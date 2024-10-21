@@ -56,7 +56,7 @@ Using poetry to manage python packages. Make sure to cd into `Blood-type-GWAS` d
 poetry init # do once only to initialize poetry in directory
 
 # to use specific version of python loaded by ebenv
-poetry env use /app1/ebapps/arches/flat/software/Python/3.10.8-GCCcore-12.2.0/bin/python
+poetry env use /app1/ebapps/arches/flat/software/Python/3.11.5-GCCcore-13.2.0/bin/python
 
 # Add dependencies as needed
 poetry add numpy pandas matplotlib
