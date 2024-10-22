@@ -4,7 +4,7 @@
 # script to download all 22 autosomes and X chromosomes from phase 3 of 1KG
 
 # Download chromosome VCF files 
-for chr in {1..22}; do
+for chr in {22..22}; do
     # Example URL for chromosome 1, replace with actual URL pattern
     if [ $chr -eq 9 ]; then
         # echo "Skipping number 9"
@@ -20,7 +20,8 @@ done
 
 
 # chromsome X
-# wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz
+wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz
+wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz.tbi
 
 #### not enough RAM to make single concatenated VCF file on NUS HPC, only partial file made, used 01_filter_1KG_vcf.sh to filter first then concatenate ####
 

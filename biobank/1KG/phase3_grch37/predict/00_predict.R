@@ -179,11 +179,35 @@ ld_data <- load_and_preprocess_ld(paste0("./LD_result/all_variant_chr", chr_num,
 # positions to load based on LD data
 positions <- unique(c(ld_data$BP_A, ld_data$BP_B))
 
-vcf_data <- load_and_preprocess_vcf(paste0("./original_data_with_id/chr", chr_num, ".dedup.vcf.gz"), chr_num, positions)
+# vcf_data <- load_and_preprocess_vcf(paste0("./original_data_with_id/chr", chr_num, ".dedup.vcf.gz"), chr_num, positions)
+vcf_data <- load_and_preprocess_vcf(paste0("./original_data/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz"), chr_num, positions) # codespace
 
 df_genotype <- VCF_to_df(vcf_data)
-target_column_name <- "2666384"
-results <- train_and_evaluate_model_naivebayes(df_genotype, target_column_name)
+
+# Initialize an empty list to store results
+chrX_results <- list()
+
+# Loop through your positions
+for (pos in unique(ld_data$BP_A)) {
+  target_column_name <- as.character(pos)
+  results <- train_and_evaluate_model_naivebayes(df_genotype, target_column_name)
+
+  # Store results for this iteration
+  chrX_results[[target_column_name]] <- results 
+}
+
+# Combine results into a data frame
+results_df <- do.call(rbind, lapply(all_results, function(x) {
+  data.frame(
+    target_column = names(x),
+    model_summary = I(list(x$model_summary)), # Store summary as a list column
+    # train_conf_matrix = I(list(x$train_conf_matrix)), # Store matrix as a list column
+    # test_conf_matrix = I(list(x$test_conf_matrix)), # Store matrix as a list column
+    auc = x$auc
+  )
+}
+)
+)
 
 
 # Example usage
@@ -199,7 +223,7 @@ results <- train_and_evaluate_model_naivebayes(df_genotype, target_column_name)
 # print(results$train_conf_matrix)
 # print(results$test_conf_matrix)
 
-save.image("temp_image.Rdata")
+save.image("chr23_vcf_loaded_df_genotype.Rdata")
 
 
 #phenotype_variant_map["O"]="261delG"
