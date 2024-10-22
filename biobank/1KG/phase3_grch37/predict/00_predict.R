@@ -221,36 +221,46 @@ train_and_evaluate_model_naivebayes <- function(df_genotype, target_column, prop
 }
 
 
-# --- Main script execution ---
+# --- Main script ---
+chr_results <- list()
+chr_to_skip <-c(5,8,10,13,14,16,20,21)
 
-chr_num <- 23
-ld_data <- load_and_preprocess_ld(paste0("./LD_result/all_variant_chr", chr_num, "_200kb.ld.ld"))
+for (chr_num in 19:22) {
+  #chr_num <- 23
+  if (chr_num %in% chr_to_skip) {
+    next
+  }
+  
+  # Load and preprocess LD data)
+  ld_data <- load_and_preprocess_ld(paste0("./LD_result/all_variant_chr", chr_num, "_200kb.ld.ld"))
 
-# chr_num <- gsub(".*chr(.*)_200kb.ld.ld", "\\1", "./LD_result/all_variant_chr18_200kb.ld.ld") 
+  # chr_num <- gsub(".*chr(.*)_200kb.ld.ld", "\\1", "./LD_result/all_variant_chr18_200kb.ld.ld") 
 
-# positions to load based on LD data
-positions <- unique(c(ld_data$BP_A, ld_data$BP_B))
+  # positions to load based on LD data
+  positions <- unique(c(ld_data$BP_A, ld_data$BP_B))
 
-vcf_data <- load_and_preprocess_vcf(paste0("./original_data_with_id/chr", chr_num, ".dedup.vcf.gz"), chr_num, positions)
-# vcf_data <- load_and_preprocess_vcf(paste0("./original_data/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz"), chr_num, positions) # codespace
+  vcf_data <- load_and_preprocess_vcf(paste0("./original_data_with_id/chr", chr_num, ".dedup.vcf.gz"), chr_num, positions)
+  # vcf_data <- load_and_preprocess_vcf(paste0("./original_data/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz"), chr_num, positions) # codespace
 
-df_genotype <- VCF_to_df(vcf_data)
+  df_genotype <- VCF_to_df(vcf_data)
 
-# Initialize an empty list to store results
-chrX_results <- list()
-
-# Loop through your positions
-for (pos in unique(ld_data$BP_A)) {
-  target_column <- as.character(pos)
-  df_results <- train_and_evaluate_model_naivebayes(df_genotype, target_column)
-  df_results$Chromosome <- chr_num
-  # Store results for this iteration
-  chrX_results[[target_column]] <- df_results 
+  # Initialize an empty list to store results
+  cat("chromosome: ", chr_num, "\n")
+  # cat("\nNumber of variants to process: ", length(unique(ld_data$BP_A)), "\n")
+  # Loop through your positions
+  for (pos in unique(ld_data$BP_A)) {
+    target_column <- as.character(pos)
+    df_results <- train_and_evaluate_model_naivebayes(df_genotype, target_column)
+    df_results$Chromosome <- chr_num
+    # Store results for this iteration
+    chr_results[[target_column]] <- df_results 
+  }
+  # save for reference
+  save.image(paste0("chr", chr_num, "_results_NB.Rdata"))
 }
-
 # faster than rbind or other methods to concatenate data frames vertically
-chrX_results_dt <- rbindlist(chrX_results)
-head(chrX_results_dt)
+chr_results_dt <- rbindlist(chr_results)
+head(chr_results_dt)
 
 # Example usage
 # results <- process_vcf_and_naive_bayes(
@@ -259,13 +269,7 @@ head(chrX_results_dt)
 # target_column = "43319519"
 # )
 
-
-# # View results
-# print(results$model_summary)
-# print(results$train_conf_matrix)
-# print(results$test_conf_matrix)
-
-save.image("chr23_vcf_loaded.Rdata") # functions are saved as well 
+# save.image("chr23_vcf_loaded.Rdata") # functions are saved as well 
 
 
 #phenotype_variant_map["O"]="261delG"
