@@ -19,7 +19,8 @@ library(GenomicRanges)
 library(caret)
 library(naivebayes)
 library(pROC)
-library(e1071)
+library(data.table) # may already be loaded by other libraries
+#library(e1071)
 
 # load existing RData
 # load("chr23_vcf_loaded.RData")
@@ -111,15 +112,15 @@ calculate_and_plot_roc <- function(model, test_data, target_col) {
   test_probs <- predict(object=model, newdata = test_data[predictor_columns], type = "prob")
   roc_test <- roc(response = test_data[[target_col]], predictor = test_probs[, 1], levels = c(0, 1))
   
-  roc_data <- data.frame(specificity = roc_test$specificities, sensitivity = roc_test$sensitivities)
+  # roc_data <- data.frame(specificity = roc_test$specificities, sensitivity = roc_test$sensitivities)
   
-  print(ggplot(roc_data, aes(x = 1 - specificity, y = sensitivity)) +
-    geom_line() +
-    geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
-    labs(title = paste("Classification ROC Curve (AUC =", round(roc_test$auc, 3), ")"),
-          x = "1 - Specificity (False Positive Rate)", 
-          y = "Sensitivity (True Positive Rate)") +
-    theme_classic())
+ # print(ggplot(roc_data, aes(x = 1 - specificity, y = sensitivity)) +
+ #   geom_line() +
+ #   geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+ #   labs(title = paste("Classification ROC Curve (AUC =", round(roc_test$auc, 3), ")"),
+ #         x = "1 - Specificity (False Positive Rate)", 
+ #         y = "Sensitivity (True Positive Rate)") +
+ #   theme_classic())
   
   return(roc_test$auc)
 }
@@ -133,39 +134,91 @@ calculate_and_plot_roc <- function(model, test_data, target_col) {
 #
 # @return (list) A list containing the model summary, training confusion matrix, testing confusion matrix, and AUC value.
 #
-train_and_evaluate_model_naivebayes <- function(df_genotype, target_column, proportion__training_data = 0.8, laplace_smoothing = 1) {
+train_and_evaluate_model_naivebayes <- function(df_genotype, target_column, proportion_training_data = 0.8, laplace_smoothing = 1) {
   if (!target_column %in% colnames(df_genotype)) {
     stop("Target column not found in the genotype data.")
   }
   
   # Split the data into training and testing sets
-  sub <- createDataPartition(y = df_genotype[[target_column]], p = proportion__training_data, list = FALSE)
-  df_train <- df_genotype[sub,]
-  df_test <- df_genotype[-sub,]
+  sub <- createDataPartition(y = df_genotype[[target_column]], p = proportion_training_data, list = FALSE)
+  df_train <- df_genotype[sub, ]
+  df_test <- df_genotype[-sub, ]
   
   print("Training model \n")
-  # unable to get formula interface working as.formula(paste(target_column, "~ ."))
+  start_time <- Sys.time()
+  
+  # Train Naive Bayes model
   predictor_columns <- setdiff(colnames(df_train), target_column)
-  nb_mod <- naive_bayes(x=df_train[predictor_columns], y=df_train[[target_column]], laplace = laplace_smoothing)
-  print("done\n")
+  nb_mod <- naive_bayes(x = df_train[predictor_columns], y = df_train[[target_column]], laplace = laplace_smoothing)
+  
+  end_time <- Sys.time()
+  print(paste("Done! Training time:", round(end_time - start_time, 2), "seconds"))
   
   # Calculate performance metrics
   nb_train_perf <- predict(nb_mod, newdata = df_train[predictor_columns], type = "class")
-  train_conf <- confusionMatrix(data = nb_train_perf, reference = df_train[[target_column]], positive = "0", mode = "everything") # 0 is reference allele, 1 is alternate
+  train_conf <- confusionMatrix(data = nb_train_perf, reference = df_train[[target_column]], positive = "0", mode = "everything")
   
   nb_test_perf <- predict(nb_mod, newdata = df_test[predictor_columns], type = "class")
   test_conf <- confusionMatrix(data = nb_test_perf, reference = df_test[[target_column]], positive = "0", mode = "everything")
   
-  auc <- calculate_and_plot_roc(nb_mod, df_test, target_column)
-  
-  return(list(model_summary = summary(nb_mod), 
-              train_conf_matrix = train_conf, 
-              test_conf_matrix = test_conf, 
-              auc = auc
-              )
-        )
-}
+  # Calculate AUC, handle possible NA or NULL
+  auc <- tryCatch({
+    calculate_and_plot_roc(nb_mod, df_test, target_column)
+  }, error = function(e) {
+    warning("ROC calculation failed. Setting AUC to NA.")
+    return(NA)
+  })
 
+  # Check if confusion matrices are valid
+  if (nrow(train_conf$table) == 0 || nrow(test_conf$table) == 0) {
+    warning("Confusion matrix calculation failed. Setting values to NA.")
+    return(data.frame(Chromosome = chr_num, Target_Column = target_column, Laplace_Smoothing = laplace_smoothing, Proportion_Training_Data = proportion_training_data, AUC = auc, Test_Accuracy = NA, Train_Accuracy = NA))
+  }
+  
+  # Create a dataframe to store performance metrics
+  metrics_df <- data.frame(
+    Chromosome = -1, # need to assign somehow
+    Model = "Naive Bayes",
+    Target_Column = target_column,
+    Laplace_Smoothing = laplace_smoothing,
+    Proportion_Training_Data = proportion_training_data,
+    
+    # Training metrics
+    Train_Accuracy = train_conf$overall['Accuracy'],
+    Train_Kappa = train_conf$overall['Kappa'],
+    Train_Sensitivity = train_conf$byClass['Sensitivity'],
+    Train_Specificity = train_conf$byClass['Specificity'],
+    Train_Pos_Pred_Value = train_conf$byClass['Pos Pred Value'],
+    Train_Neg_Pred_Value = train_conf$byClass['Neg Pred Value'],
+    Train_Precision = train_conf$byClass['Precision'],
+    Train_Recall = train_conf$byClass['Recall'],
+    Train_F1 = train_conf$byClass['F1'],
+    Train_Prevalence = train_conf$byClass['Prevalence'],
+    Train_Detection_Rate = train_conf$byClass['Detection Rate'],
+    Train_Detection_Prevalence = train_conf$byClass['Detection Prevalence'],
+    Train_Balanced_Accuracy = (train_conf$byClass['Sensitivity'] + train_conf$byClass['Specificity']) / 2,
+    
+    # Testing metrics
+    Test_Accuracy = test_conf$overall['Accuracy'],
+    Test_Kappa = test_conf$overall['Kappa'],
+    Test_Sensitivity = test_conf$byClass['Sensitivity'],
+    Test_Specificity = test_conf$byClass['Specificity'],
+    Test_Pos_Pred_Value = test_conf$byClass['Pos Pred Value'],
+    Test_Neg_Pred_Value = test_conf$byClass['Neg Pred Value'],
+    Test_Precision = test_conf$byClass['Precision'],
+    Test_Recall = test_conf$byClass['Recall'],
+    Test_F1 = test_conf$byClass['F1'],
+    Test_Prevalence = test_conf$byClass['Prevalence'],
+    Test_Detection_Rate = test_conf$byClass['Detection Rate'],
+    Test_Detection_Prevalence = test_conf$byClass['Detection Prevalence'],
+    Test_Balanced_Accuracy = (test_conf$byClass['Sensitivity'] + test_conf$byClass['Specificity']) / 2,
+    
+    # ROC AUC
+    AUC = auc
+  )
+  
+  return(metrics_df)
+}
 
 
 # --- Main script execution ---
@@ -173,14 +226,13 @@ train_and_evaluate_model_naivebayes <- function(df_genotype, target_column, prop
 chr_num <- 23
 ld_data <- load_and_preprocess_ld(paste0("./LD_result/all_variant_chr", chr_num, "_200kb.ld.ld"))
 
-#ld_data <- load_and_preprocess_ld("./LD_result/all_variant_chr${chr}_200kb.ld.ld")
 # chr_num <- gsub(".*chr(.*)_200kb.ld.ld", "\\1", "./LD_result/all_variant_chr18_200kb.ld.ld") 
 
 # positions to load based on LD data
 positions <- unique(c(ld_data$BP_A, ld_data$BP_B))
 
-# vcf_data <- load_and_preprocess_vcf(paste0("./original_data_with_id/chr", chr_num, ".dedup.vcf.gz"), chr_num, positions)
-vcf_data <- load_and_preprocess_vcf(paste0("./original_data/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz"), chr_num, positions) # codespace
+vcf_data <- load_and_preprocess_vcf(paste0("./original_data_with_id/chr", chr_num, ".dedup.vcf.gz"), chr_num, positions)
+# vcf_data <- load_and_preprocess_vcf(paste0("./original_data/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1c.20130502.genotypes.vcf.gz"), chr_num, positions) # codespace
 
 df_genotype <- VCF_to_df(vcf_data)
 
@@ -189,26 +241,16 @@ chrX_results <- list()
 
 # Loop through your positions
 for (pos in unique(ld_data$BP_A)) {
-  target_column_name <- as.character(pos)
-  results <- train_and_evaluate_model_naivebayes(df_genotype, target_column_name)
-
+  target_column <- as.character(pos)
+  df_results <- train_and_evaluate_model_naivebayes(df_genotype, target_column)
+  df_results$Chromosome <- chr_num
   # Store results for this iteration
-  chrX_results[[target_column_name]] <- results 
+  chrX_results[[target_column]] <- df_results 
 }
 
-# Combine results into a data frame
-results_df <- do.call(rbind, lapply(all_results, function(x) {
-  data.frame(
-    target_column = names(x),
-    model_summary = I(list(x$model_summary)), # Store summary as a list column
-    # train_conf_matrix = I(list(x$train_conf_matrix)), # Store matrix as a list column
-    # test_conf_matrix = I(list(x$test_conf_matrix)), # Store matrix as a list column
-    auc = x$auc
-  )
-}
-)
-)
-
+# faster than rbind or other methods to concatenate data frames vertically
+chrX_results_dt <- rbindlist(chrX_results)
+head(chrX_results_dt)
 
 # Example usage
 # results <- process_vcf_and_naive_bayes(
@@ -223,7 +265,7 @@ results_df <- do.call(rbind, lapply(all_results, function(x) {
 # print(results$train_conf_matrix)
 # print(results$test_conf_matrix)
 
-save.image("chr23_vcf_loaded_df_genotype.Rdata")
+save.image("chr23_vcf_loaded.Rdata") # functions are saved as well 
 
 
 #phenotype_variant_map["O"]="261delG"
